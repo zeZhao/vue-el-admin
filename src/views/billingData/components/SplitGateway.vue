@@ -1,7 +1,7 @@
 <template>
   <!-- 拆分通道数据 -->
   <div class="SplitGateway">
-    <el-button type="primary" @click="splitData">拆分通道数据</el-button>
+    <el-button @click="splitData">拆分通道数据</el-button>
     <el-dialog
       title="提示"
       width="80%"

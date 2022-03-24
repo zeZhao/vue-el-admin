@@ -1,7 +1,7 @@
 <template>
   <!-- 拆分账户数据 -->
   <div class="SplitUser">
-    <el-button type="primary" @click="splitData">拆分账户数据</el-button>
+    <el-button @click="splitData">拆分账户数据</el-button>
     <el-dialog
       title="提示"
       width="80%"
@@ -66,7 +66,7 @@
         </el-table-column>
         <el-table-column prop="userId" label="" width="100">
           <template slot-scope="{ row, $index }">
-            <el-button type="text" v-if="!row.raw" @click="deteleData($index)"
+            <el-button type="text" v-if="!row.init" @click="deteleData($index)"
               >删除</el-button
             >
           </template>
@@ -120,9 +120,14 @@ export default {
           price: "",
           consumptionSum: 0,
           raw: false, //表格初始数据标识
+          init: true,
         };
         this.tableData.push(
-          Object.assign(this.rawData, { dataState: "原数据", raw: true })
+          Object.assign(this.rawData, {
+            dataState: "原数据",
+            raw: true,
+            init: true,
+          })
         );
         this.tableData.push(newData);
         this.dialogVisible = true;
@@ -138,6 +143,7 @@ export default {
         price: "",
         consumptionSum: 0,
         raw: false, //表格初始数据标识
+        init: false,
       };
       this.tableData.push(newData);
       //最多添加15个拆分数据

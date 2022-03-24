@@ -1,10 +1,15 @@
 <template>
   <!-- 账户迁移 -->
   <div class="MigrationUser">
-    <el-button type="primary" @click="MigrationUser">账户迁移</el-button>
-    <el-dialog title="账户迁移" :visible.sync="dialogFormVisible">
-      <el-form :model="form" :label-width="formLabelWidth">
-        <el-form-item label="月份：">
+    <el-button @click="MigrationUser">账户迁移</el-button>
+    <el-dialog
+      title="账户迁移"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
+      <el-form :model="form" :label-width="formLabelWidth" :rules="rules">
+        <el-form-item label="月份：" prop="month">
           <el-select v-model="form.region" placeholder="请选择月份">
             <el-option
               v-for="item in monthList"
@@ -14,11 +19,11 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="原账户编号：">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item label="原账户编号：" prop="userId">
+          <el-input v-model="form.name" type="number"></el-input>
         </el-form-item>
         <el-form-item label="条数：">
-          <el-input v-model="form.name" disabled></el-input>
+          <el-input v-model="form.count" disabled></el-input>
         </el-form-item>
         <el-form-item label="原单价(分)：">
           <el-input v-model="form.name" disabled></el-input>
@@ -26,11 +31,16 @@
         <el-form-item label="原消耗金额(元)：">
           <el-input v-model="form.name" disabled></el-input>
         </el-form-item>
-        <el-form-item label="修改后账户编号：">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item label="修改后账户编号：" prop="updataUserId">
+          <el-input v-model="form.name" maxlength="10" type="number"></el-input>
         </el-form-item>
-        <el-form-item label="修改后单价(分)：">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item label="修改后单价(分)：" prop="updataPrice">
+          <el-input-number
+            v-model="form.name"
+            :step="0.1"
+            :min="0"
+            size="small"
+          ></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -61,7 +71,19 @@ export default {
         resource: "",
         desc: "",
       },
-      formLabelWidth: "120px",
+      rules: {
+        month: [{ required: true, message: "请选择月份", trigger: "blur" }],
+        userId: [
+          { required: true, message: "请输入原账户编号", trigger: "blur" },
+        ],
+        updataUserId: [
+          { required: true, message: "请输入修改后账户编号", trigger: "blur" },
+        ],
+        updataPrice: [
+          { required: true, message: "请输入修改后单价(分)", trigger: "blur" },
+        ],
+      },
+      formLabelWidth: "130px",
     };
   },
   created() {},

@@ -32,7 +32,6 @@
           borderBottom: '1px solid #fff',
         }"
         highlight-current-row
-        @selection-change="handleSelectionChange"
       >
         <el-table-column prop="month" label="月份" />
         <el-table-column prop="month" label="任务ID" />
@@ -50,7 +49,12 @@
         <el-table-column prop="gprice" label="更新的通道编号" />
         <el-table-column prop="gprice" label="更新的通道单价" />
         <el-table-column prop="count" label="状态" />
-        <el-table-column prop="proceeds" label="操作">
+        <el-table-column
+          prop="proceeds"
+          label="操作"
+          align="center"
+          fixed="right"
+        >
           <template slot-scope="{ row }">
             <el-popover placement="top" width="160" v-model="executeVisible">
               <p>是否确定执行？</p>
@@ -68,7 +72,12 @@
                   >确定</el-button
                 >
               </div>
-              <el-button slot="reference">执行</el-button>
+              <el-button
+                slot="reference"
+                type="text"
+                @click="executeVisible = true"
+                >执行</el-button
+              >
             </el-popover>
             <el-popover placement="top" width="160" v-model="revokeVisible">
               <p>是否确定撤销？</p>
@@ -86,7 +95,12 @@
                   >确定</el-button
                 >
               </div>
-              <el-button slot="reference">撤销</el-button>
+              <el-button
+                slot="reference"
+                type="text"
+                @click="revokeVisible = true"
+                >撤销</el-button
+              >
             </el-popover>
           </template>
         </el-table-column>
@@ -106,7 +120,7 @@
 </template>
 
 <script>
-import { selectDate, getMonth } from "@/api/billingData";
+import { selectDate, getMonthUnLock } from "@/api/billingData";
 
 export default {
   components: {},
@@ -118,14 +132,7 @@ export default {
         pageSize: 10,
       },
       //表格数据
-      tableData: [
-        { createUser: "484237" },
-        { createUser: "484237" },
-        { createUser: "484237" },
-        { createUser: "484237" },
-        { createUser: "484237" },
-        { createUser: "484237" },
-      ],
+      tableData: [],
       total: 0,
       rawData: {},
       monthList: [],
@@ -135,14 +142,15 @@ export default {
   },
   created() {},
   mounted() {
-    this.getQueryByPage();
+    this.getMonthList();
   },
   computed: {},
   methods: {
     getMonthList() {
-      getMonth().then((res) => {
+      getMonthUnLock().then((res) => {
         if (res.code === 200) {
-          this.monthList = res.data.list;
+          this.monthList = res.data;
+          this.searchForm.month = this.monthList[0].month;
         }
       });
     },
@@ -182,6 +190,11 @@ export default {
 .taskManagement {
   // padding: 24px 24px;
   // background: red;
+  .el-breadcrumb {
+    margin-top: -12px;
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
   .search {
     margin-bottom: 16px;
     padding: 24px 24px;
@@ -193,6 +206,7 @@ export default {
       border: 1px solid rgba(31, 35, 41, 0.15);
       border-radius: 4px;
       padding-left: 12px !important;
+      margin-bottom: 0 !important;
     }
     ::v-deep .el-form-item__label {
       height: 32px;

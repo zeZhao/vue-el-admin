@@ -1,8 +1,13 @@
 <template>
   <!-- 添加数据 -->
   <div class="AddData">
-    <el-button type="primary" @click="MigrationUser">添加数据</el-button>
-    <el-dialog title="添加数据" :visible.sync="dialogFormVisible">
+    <el-button @click="MigrationUser">添加数据</el-button>
+    <el-dialog
+      title="添加数据"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
       <el-form :model="form" :label-width="formLabelWidth">
         <el-form-item label="月份：">
           <el-select v-model="form.month" placeholder="请选择月份">
@@ -14,7 +19,7 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="账户编号">
+        <el-form-item label="账户编号：">
           <el-input v-model="form.gateway"></el-input>
         </el-form-item>
         <el-form-item label="条数：">
@@ -26,14 +31,14 @@
         <el-form-item label="通道编号：">
           <el-input v-model="form.cost" disabled></el-input>
         </el-form-item>
-        <el-form-item label="通道单价(分)">
+        <el-form-item label="通道单价(分)：">
           <el-input v-model="form.updateGateway"></el-input>
         </el-form-item>
         <el-form-item label="消耗金额(元)：">
-          <el-input v-model="form.updateUprice"></el-input>
+          <span>{{ form.updateUprice }}</span>
         </el-form-item>
         <el-form-item label="成本：">
-          <el-input v-model="form.updateUprice"></el-input>
+          <span>{{ form.updateUprice }}</span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -63,6 +68,7 @@ export default {
         type: [],
         resource: "",
         desc: "",
+        updateUprice: 0,
       },
       formLabelWidth: "120px",
     };

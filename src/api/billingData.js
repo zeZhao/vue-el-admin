@@ -17,6 +17,22 @@ export function getMonth(data) {
   })
 }
 //解锁月份
+export function updateMonthLock(data) {
+  return request({
+    url: '/changeDate/updateMonthLock',
+    method: 'post',
+    data
+  })
+}
+//获取所有解锁月份
+export function getMonthUnLock(data) {
+  return request({
+    url: '/changeDate/getMonthUnLock',
+    method: 'post',
+    data
+  })
+}
+//账单数据统计
 export function selectDateAmount(data) {
   return request({
     url: '/changeDate/selectDateAmount',

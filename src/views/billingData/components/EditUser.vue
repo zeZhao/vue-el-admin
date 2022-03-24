@@ -1,8 +1,13 @@
 <template>
   <!-- 修改账户单价 -->
   <div class="EditUser">
-    <el-button type="primary" @click="MigrationUser">修改账户单价</el-button>
-    <el-dialog title="修改账户单价" :visible.sync="dialogFormVisible">
+    <el-button @click="MigrationUser">修改账户单价</el-button>
+    <el-dialog
+      title="修改账户单价"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
       <el-form :model="form" :label-width="formLabelWidth">
         <el-form-item label="月份：">
           <el-select v-model="form.region" placeholder="请选择月份">
@@ -26,7 +31,7 @@
         <el-form-item label="原消耗金额(元)：">
           <el-input v-model="form.name" disabled></el-input>
         </el-form-item>
-        <el-form-item label="修改后单价(分)">
+        <el-form-item label="修改后单价(分)：">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="修改后金额(元)：">

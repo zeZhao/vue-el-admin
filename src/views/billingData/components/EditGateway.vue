@@ -1,8 +1,13 @@
 <template>
   <!-- 修改通道单价 -->
   <div class="EditGateway">
-    <el-button type="primary" @click="MigrationUser">修改通道单价</el-button>
-    <el-dialog title="修改通道单价" :visible.sync="dialogFormVisible">
+    <el-button @click="MigrationUser">修改通道单价</el-button>
+    <el-dialog
+      title="修改通道单价"
+      :visible.sync="dialogFormVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+    >
       <el-form :model="form" :label-width="formLabelWidth">
         <el-form-item label="月份：">
           <el-select v-model="form.month" placeholder="请选择月份">
