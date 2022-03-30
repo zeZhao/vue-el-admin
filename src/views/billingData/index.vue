@@ -46,17 +46,13 @@
     <div class="content">
       <div class="handle">
         <div class="left">
-          <SplitUser
-            :rawData="{ userId: 666, number: 666, price: 2, consumptionSum: 0 }"
-          ></SplitUser>
-          <SplitGateway
-            :rawData="{ userId: 666, number: 666, price: 2, consumptionSum: 0 }"
-          ></SplitGateway>
-          <MigrationUser></MigrationUser>
-          <MigrationGateway></MigrationGateway>
-          <AddData></AddData>
-          <EditUser></EditUser>
-          <EditGateway></EditGateway>
+          <SplitUser :rawData="rawData"></SplitUser>
+          <SplitGateway :rawData="rawData"></SplitGateway>
+          <MigrationGateway :monthList="monthList"></MigrationGateway>
+          <MigrationUser :monthList="monthList"></MigrationUser>
+          <AddData :monthList="monthList"></AddData>
+          <EditUser :monthList="monthList"></EditUser>
+          <EditGateway :monthList="monthList"></EditGateway>
         </div>
 
         <div class="right">
@@ -78,7 +74,7 @@
         @selection-change="handleSelectionChange"
       >
         <el-table-column type="selection" width="55" />
-        <el-table-column prop="month" label="月份" />
+        <el-table-column prop="countDate" label="月份" />
         <el-table-column prop="userId" label="账户编号" />
         <el-table-column prop="userName" label="账户名称" />
         <el-table-column prop="corpName" label="商户名称" />
@@ -164,9 +160,26 @@ export default {
     await this.getMonthList();
     this.getQueryByPage();
     this.selectDateAmount();
+    // this.a();
   },
   computed: {},
   methods: {
+    a() {
+      let myApp = {};
+      myApp.namespace = function (name) {
+        let parts = name.split(".");
+        let current = myApp;
+        for (var i in parts) {
+          if (!current[parts[i]]) {
+            current[parts[i]] = {};
+          }
+          current = current[parts[i]];
+        }
+      };
+      myApp.namespace("event");
+      myApp.namespace("dom.style");
+      console.log(myApp, "-----");
+    },
     selectDateAmount() {
       selectDateAmount(this.searchForm).then((res) => {
         if (res.code === 200) {
@@ -225,6 +238,16 @@ export default {
 </script>
 <style lang="scss" scoped>
 .downloadCenter {
+  ::v-deep .el-dialog {
+    padding: 24px;
+  }
+  ::v-deep .el-dialog__body {
+    padding: 24px 0;
+  }
+  ::v-deep .el-dialog__header,
+  ::v-deep .el-dialog__footer {
+    padding: 0;
+  }
   // padding: 24px 24px;
   // background: red;
   .search {
@@ -270,6 +293,11 @@ export default {
       ::v-deep .el-button {
         margin-right: 10px;
       }
+      ::v-deep .el-form-item__label {
+        height: 32px;
+        line-height: 32px;
+      }
+
       .right,
       .left {
         display: flex;

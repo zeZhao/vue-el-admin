@@ -54,6 +54,14 @@ export const constantRoutes = [
           title: '任务管理'
         }
       },
+      {
+        path: '/detailed',
+        name: 'detailed',
+        component: () => import(/* webpackChunkName: "about" */  '@/views/billingData/detailed.vue'),
+        meta: {
+          title: '任务管理'
+        }
+      },
     ]
   },
   {

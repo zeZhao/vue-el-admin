@@ -1,5 +1,5 @@
 <template>
-  <div class="taskManagement">
+  <div class="detailed">
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/billingData' }"
         >账单数据</el-breadcrumb-item
@@ -9,8 +9,8 @@
       >
     </el-breadcrumb>
     <div class="link">
-      <router-link to="/taskManagement" class="hover">统计报表任务</router-link>
-      <router-link to="/detailed">明细报表任务</router-link>
+      <router-link to="/taskManagement">统计报表任务</router-link>
+      <router-link to="/detailed" class="hover">明细报表任务</router-link>
     </div>
 
     <div class="search">
@@ -26,6 +26,9 @@
           </el-select>
         </el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
+        <el-button type="primary" @click="oneClickGo" style="float: right"
+          >一键执行</el-button
+        >
       </el-form>
     </div>
     <div class="content">
@@ -75,24 +78,6 @@
               width="280"
               confirm-button-text="确认"
               cancel-button-text="取消"
-              title="是否确定执行？"
-              v-model="executeVisible"
-              @confirm="confirmExecute(row)"
-              @cancel="executeVisible = false"
-            >
-              <el-button
-                slot="reference"
-                type="text"
-                @click="executeVisible = true"
-                >执行</el-button
-              >
-            </el-popconfirm>
-            <el-popconfirm
-              placement="bottom"
-              :hide-icon="true"
-              width="280"
-              confirm-button-text="确认"
-              cancel-button-text="取消"
               title="是否确定撤销？"
               v-model="revokeVisible"
               @confirm="confirmRevoke(row)"
@@ -124,10 +109,11 @@
 
 <script>
 import {
-  selectTask,
+  selectTaskDetail,
   getMonthUnLock,
   addTasksToWaiting,
-  updateStatus,
+  updateStatusDetail,
+  doDetailTask,
 } from "@/api/billingData";
 
 export default {
@@ -166,7 +152,7 @@ export default {
     },
     //撤销
     confirmRevoke(row) {
-      updateStatus({ id: row.id }).then((res) => {
+      updateStatusDetail({ id: row.id }).then((res) => {
         if (res.code === 200) {
           this.$message.success("操作成功");
           this.getQueryByPage();
@@ -192,7 +178,7 @@ export default {
     },
     getQueryByPage() {
       let form = Object.assign(this.searchForm);
-      selectTask(form).then((res) => {
+      selectTaskDetail(form).then((res) => {
         if (res.code === 200) {
           this.tableData = res.data.list;
           this.total = res.data.total;
@@ -209,15 +195,49 @@ export default {
     onSubmit() {
       this.getQueryByPage();
     },
+    //一键执行
+    oneClickGo() {
+      this.$confirm("是否确定执行全部明细任务？", "", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          doDetailTask({ month: this.searchForm.month }).then((res) => {
+            if (res.code === 200) {
+              this.$message({
+                type: "success",
+                message: "操作成功!",
+              });
+            }
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
   },
   watch: {},
 };
 </script>
 <style lang="scss" scoped>
-.taskManagement {
-  // padding: 24px 24px;
-  // background: red;
+::v-deep .el-message-box {
+  padding: 24px !important;
+}
+::v-deep .el-message-box__content {
+  padding: 24px 0;
+}
+::v-deep .el-message-box__header,
+::v-deep .el-message-box__btns {
+  padding: 0;
+}
+.detailed {
   .el-breadcrumb {
+    // padding: 24px 24px;
+    // background: red;
     margin-top: -12px;
     font-size: 16px;
     margin-bottom: 12px;

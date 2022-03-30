@@ -15,21 +15,22 @@
         highlight-current-row
       >
         <el-table-column prop="dataState" label="数据状态" width="100" />
-        <el-table-column prop="userId" label="通道编号">
+        <el-table-column prop="gateway" label="通道编号">
           <template slot-scope="{ row, $index }">
             <el-input
               v-if="!row.raw"
-              v-model="tableData[$index].userId"
+              type="number"
+              v-model="tableData[$index].gateway"
               placeholder="请输入通道编号"
             ></el-input>
-            <span v-else>{{ row.userId }}</span>
+            <span v-else>{{ row.gateway }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="number" label="条数">
+        <el-table-column prop="count" label="条数">
           <template slot-scope="{ row, $index }">
             <el-input-number
               v-if="!row.raw"
-              v-model="tableData[$index].number"
+              v-model="tableData[$index].count"
               :step="1"
               :min="0"
               size="small"
@@ -39,34 +40,35 @@
               v-model="tableData[$index].number"
               placeholder="请输入条数"
             ></el-input> -->
-            <span v-else>{{ row.number }}</span>
+            <span v-else>{{ row.count }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="price" label="通道单价(分)">
+        <el-table-column prop="gprice" label="通道单价(分)">
           <template slot-scope="{ row, $index }">
             <!-- <el-input
               v-if="!row.raw"
-              v-model="tableData[$index].price"
+              v-model="tableData[$index].gprice"
               placeholder="请输入单价"
             ></el-input> -->
             <el-input-number
               v-if="!row.raw"
-              v-model="tableData[$index].price"
+              v-model="tableData[$index].gprice"
               :step="0.1"
+              :precision="2"
               :min="0"
               size="small"
             ></el-input-number>
-            <span v-else>{{ row.price }}</span>
+            <span v-else>{{ row.gprice }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="consumptionSum" label="消耗金额(元)">
+        <el-table-column prop="proceeds" label="消耗金额(元)">
           <template slot-scope="{ row }">
-            <span>{{ row.number * row.price }}</span>
+            <span>{{ row.count * row.gprice }}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="userId" label="" width="100">
+        <el-table-column label="" width="100">
           <template slot-scope="{ row, $index }">
-            <el-button type="text" v-if="!row.raw" @click="deteleData($index)"
+            <el-button type="text" v-if="!row.init" @click="deteleData($index)"
               >删除</el-button
             >
           </template>
@@ -82,10 +84,11 @@
 </template>
 
 <script>
+import { addTasks } from "@/api/billingData";
 export default {
   props: {
     rawData: {
-      type: Object,
+      type: [Array, Object],
       required: true,
     },
   },
@@ -95,14 +98,6 @@ export default {
       // 弹窗表格数据
       dialogVisible: false,
       tableData: [],
-      newData: {
-        dataState: "拆分数据",
-        userId: "",
-        number: "",
-        price: "",
-        consumptionSum: 0,
-        raw: false, //表格初始数据标识
-      },
       addUserDisabled: true,
     };
   },
@@ -111,18 +106,23 @@ export default {
   computed: {},
   methods: {
     splitData() {
-      if (Object.keys(this.rawData).length > 0) {
+      if (this.rawData.length === 1) {
         this.tableData = [];
         let newData = {
           dataState: "拆分数据",
-          userId: "",
-          number: "",
-          price: "",
-          consumptionSum: 0,
+          gateway: "",
+          count: "",
+          gprice: "",
+          proceeds: 0,
           raw: false, //表格初始数据标识
+          init: true,
         };
         this.tableData.push(
-          Object.assign(this.rawData, { dataState: "原数据", raw: true })
+          Object.assign(this.rawData[0], {
+            dataState: "原数据",
+            raw: true,
+            init: true,
+          })
         );
         this.tableData.push(newData);
         this.dialogVisible = true;
@@ -133,11 +133,12 @@ export default {
     addUser() {
       let newData = {
         dataState: "拆分数据",
-        userId: "",
-        number: "",
-        price: "",
-        consumptionSum: 0,
+        gateway: "",
+        count: "",
+        gprice: "",
+        proceeds: 0,
         raw: false, //表格初始数据标识
+        init: false,
       };
       this.tableData.push(newData);
       //最多添加15个拆分数据
@@ -152,7 +153,35 @@ export default {
       }
     },
     submit() {
-      console.log(this.tableData, "-----");
+      let isNull = this.tableData
+        .filter((v) => !v.raw)
+        .every((item) => item.gateway && item.count && item.gprice);
+      if (isNull) {
+        let counts = 0;
+        const { count } = this.tableData[0];
+        this.tableData
+          .filter((v) => !v.raw)
+          .forEach((item) => {
+            counts += item.count;
+          });
+        if (counts < count) {
+          let data = {
+            ...this.tableData[0],
+            type: 2,
+            data: this.tableData.filter((v) => !v.raw),
+          };
+          addTasks(data).then((res) => {
+            if (res.code === 200) {
+              this.$message.success("拆分成功！");
+              this.dialogVisible = false;
+            }
+          });
+        } else {
+          this.$message.error("已超过原数据条数！");
+        }
+      } else {
+        this.$message.error("请填写拆分数据");
+      }
     },
   },
   watch: {},
