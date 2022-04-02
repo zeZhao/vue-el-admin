@@ -8,7 +8,12 @@
       :close-on-click-modal="false"
       :close-on-press-escape="false"
     >
-      <el-form :model="form" :label-width="formLabelWidth" :rules="rules">
+      <el-form
+        :model="form"
+        :label-width="formLabelWidth"
+        :rules="rules"
+        ref="form"
+      >
         <el-form-item label="月份：" prop="month">
           <el-select v-model="form.month" placeholder="请选择月份">
             <el-option
@@ -53,7 +58,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button @click="cancel">取 消</el-button>
         <el-button type="primary" @click="submit">提交任务</el-button>
       </div>
     </el-dialog>
@@ -106,6 +111,10 @@ export default {
   mounted() {},
   computed: {},
   methods: {
+    cancel() {
+      this.$refs["form"].resetFields();
+      this.dialogFormVisible = false;
+    },
     userInp(val) {
       queryCountByUserIdOrGateway({
         gateway: val,
@@ -122,11 +131,18 @@ export default {
       this.dialogFormVisible = true;
     },
     submit() {
-      let form = Object.assign(this.form, { type: 3 });
-      addTask(form).then((res) => {
-        if (res.code === 200) {
-          this.$message.success("修改成功！");
-          this.dialogFormVisible = false;
+      this.$refs["form"].validate((valid) => {
+        if (valid) {
+          let form = Object.assign(this.form, { type: 3 });
+          addTask(form).then((res) => {
+            if (res.code === 200) {
+              this.$message.success("修改成功！");
+              this.dialogFormVisible = false;
+            }
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
         }
       });
     },

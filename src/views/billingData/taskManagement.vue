@@ -62,12 +62,7 @@
             <span v-if="row.status === 4">撤回</span>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="proceeds"
-          label="操作"
-          align="center"
-          fixed="right"
-        >
+        <el-table-column prop="proceeds" label="操作" fixed="right" width="138">
           <template slot-scope="{ row }">
             <el-popconfirm
               placement="bottom"
@@ -80,15 +75,12 @@
               @confirm="confirmExecute(row)"
               @cancel="executeVisible = false"
             >
-              <el-button
-                slot="reference"
-                type="text"
-                @click="executeVisible = true"
-                >执行</el-button
+              <span slot="reference" type="text" @click="executeVisible = true"
+                >执行</span
               >
             </el-popconfirm>
             <el-popconfirm
-              placement="bottom"
+              placement="bottom-end"
               :hide-icon="true"
               width="280"
               confirm-button-text="确认"
@@ -98,11 +90,12 @@
               @confirm="confirmRevoke(row)"
               @cancel="revokeVisible = false"
             >
-              <el-button
+              <span
                 slot="reference"
                 type="text"
                 @click="revokeVisible = true"
-                >撤销</el-button
+                style="color: #f54945; padding-left: 24px"
+                >撤销</span
               >
             </el-popconfirm>
           </template>
@@ -140,7 +133,7 @@ export default {
         pageSize: 10,
       },
       //表格数据
-      tableData: [],
+      tableData: [{ month: "11" }],
       total: 0,
       rawData: {},
       monthList: [],
@@ -213,6 +206,22 @@ export default {
   watch: {},
 };
 </script>
+
+<style lang="scss">
+.el-popover {
+  padding: 24px !important;
+  .el-popconfirm__main {
+    color: #1f2329;
+  }
+  .el-popconfirm__action {
+    .el-button--text {
+      border: 1px solid #dee0e3;
+      margin-right: 10px;
+      padding: 8px 18px;
+    }
+  }
+}
+</style>
 <style lang="scss" scoped>
 .taskManagement {
   // padding: 24px 24px;

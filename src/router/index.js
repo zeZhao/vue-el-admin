@@ -123,15 +123,15 @@ router.beforeEach((to, from, next) => {
   if (to.name == 'login') {
     next();
   } else {
-    next();
-    // let token = getStorage('token');
-    // if (token) {
-    //   next();
-    // } else {
-    //   next({
-    //     path: '/login'
-    //   });
-    // }
+    // next();
+    let token = getStorage('token');
+    if (token) {
+      next();
+    } else {
+      next({
+        path: '/login'
+      });
+    }
   }
 })
 

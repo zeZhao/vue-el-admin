@@ -3,7 +3,7 @@
   <div class="SplitUser">
     <el-button @click="splitData">拆分账户数据</el-button>
     <el-dialog
-      title="提示"
+      title="拆分账户数据"
       width="80%"
       :close-on-click-modal="false"
       :close-on-press-escape="false"
@@ -68,13 +68,23 @@
         </el-table-column>
         <el-table-column label="" width="100">
           <template slot-scope="{ row, $index }">
-            <el-button type="text" v-if="!row.init" @click="deteleData($index)"
+            <el-button
+              type="text"
+              v-if="!row.init"
+              @click="deteleData($index)"
+              style="color: #fa7385"
               >删除</el-button
             >
           </template>
         </el-table-column>
       </el-table>
-      <el-button @click="addUser" v-if="addUserDisabled">添加账户</el-button>
+      <el-button
+        @click="addUser"
+        v-if="addUserDisabled"
+        icon="el-icon-circle-plus-outline"
+        class="addBtn"
+        >添加账户</el-button
+      >
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="submit">提交任务</el-button>
@@ -188,4 +198,14 @@ export default {
   watch: {},
 };
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.addBtn {
+  width: 100%;
+  border: 1px dashed #dee0e3;
+}
+.addBtn:hover {
+  border: 1px dashed #1890ff !important;
+  color: #1890ff;
+  background: #fff;
+}
+</style>

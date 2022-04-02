@@ -309,4 +309,21 @@ export default {
     width: auto;
   }
 }
+.AddData,
+.EditGateway,
+.EditUser,
+.MigrationGateway,
+.MigrationUser {
+  ::v-deep .el-form {
+    width: 473px;
+    margin: 0 auto;
+  }
+  ::v-deep .el-form-item__content {
+    width: 292px;
+    .el-select,
+    .el-input-number--small {
+      width: 100%;
+    }
+  }
+}
 </style>

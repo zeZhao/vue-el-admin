@@ -83,11 +83,12 @@
               @confirm="confirmRevoke(row)"
               @cancel="revokeVisible = false"
             >
-              <el-button
+              <span
                 slot="reference"
                 type="text"
+                style="color: #f54945"
                 @click="revokeVisible = true"
-                >撤销</el-button
+                >撤销</span
               >
             </el-popconfirm>
           </template>
@@ -126,7 +127,7 @@ export default {
         pageSize: 10,
       },
       //表格数据
-      tableData: [],
+      tableData: [{ month: 1 }],
       total: 0,
       rawData: {},
       monthList: [],
@@ -223,17 +224,26 @@ export default {
   watch: {},
 };
 </script>
-<style lang="scss" scoped>
-::v-deep .el-message-box {
+<style lang="scss">
+.el-message-box {
+  width: 420px !important;
   padding: 24px !important;
+  box-sizing: border-box;
 }
-::v-deep .el-message-box__content {
-  padding: 24px 0;
-}
-::v-deep .el-message-box__header,
-::v-deep .el-message-box__btns {
+
+.el-message-box__header,
+.el-message-box__content,
+.el-message-box__btns {
   padding: 0;
 }
+.el-message-box__content {
+  margin-bottom: 32px;
+}
+.el-message-box__close {
+  display: none;
+}
+</style>
+<style lang="scss" scoped>
 .detailed {
   .el-breadcrumb {
     // padding: 24px 24px;

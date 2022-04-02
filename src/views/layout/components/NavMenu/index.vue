@@ -6,7 +6,7 @@
         <div class="link_img">
           <img src="@/assets/images/account_icon@2x.png" alt="" />
         </div>
-        <span>退出</span>
+        <span @click="handleCommand">退出</span>
         <!-- <div class="handle_name">
           <div class="name_img">
             <img src="@/assets/images/name_icon@2x.png" alt="" />
@@ -91,6 +91,7 @@ export default {
       logout().then((res) => {
         if (res.code === 200) {
           this.$message.success("退出成功");
+          this.confirmVisible = false;
           setStorage("token");
           this.$router.push("/login");
         }

@@ -136,23 +136,11 @@ export default {
         num;
     },
     handleLogin() {
-      // if (this.loginForm.username.length === 0) {
-      //   this.$message.error("请输入手机号");
-      //   return;
-      // }
-      // if (this.loginForm.password.length === 0) {
-      //   this.$message.error("请输入密码");
-      //   return;
-      // }
-      // if (this.loginForm.verifyCode.length === 0) {
-      //   this.$message.error("请输入图形验证码");
-      //   return;
-      // }
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
           login({
-            loginName: this.loginForm.username,
+            mobile: this.loginForm.username,
             password: this.loginForm.password,
             // verifyCode: this.loginForm.verifyCode,
             // uuId: this.loginForm.uuid
@@ -161,8 +149,8 @@ export default {
               if (data.code === 200) {
                 const smsToken = "token" + randomNum();
                 setStorage("token", smsToken);
-                setStorage("info", data.data);
-                this.$router.push("./dataExport");
+                // setStorage("info", data.data);
+                this.$router.push("./billingData");
                 this.$message.success("登录成功");
               } else {
                 this.getCaptcha();
@@ -237,7 +225,7 @@ $light_gray: #eee;
           }
           ::v-deep .el-form-item__error {
             padding-top: 8px;
-            left: -75px;
+            // left: -75px;
           }
           .loginBut {
             width: 100%;

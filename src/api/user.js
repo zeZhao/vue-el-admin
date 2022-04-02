@@ -2,14 +2,14 @@ import request from '@/utils/http'
 
 export function login(data) {
   return request({
-    url: '/user/login',
+    url: '/login/login',
     method: 'post',
     data
   })
 }
 export function logout(data) {
   return request({
-    url: '/user/logout',
+    url: '/login/logout',
     method: 'post',
     data
   })

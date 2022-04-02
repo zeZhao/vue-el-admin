@@ -26,7 +26,7 @@ service.interceptors.response.use(
         message: res.msg || res.data || '系统异常，请联系管理员',
         type: 'error',
       })
-    } else if (res.code === 501) {
+    } else if (res.code === 999) {
       setStorage("token")
       Message({
         message: '登录过期，请重新登录！',
