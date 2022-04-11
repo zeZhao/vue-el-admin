@@ -105,7 +105,7 @@ export default {
   width: 100%;
   height: 64px;
   line-height: 64px;
-  background: url("../../../../assets/images/header_back.png") no-repeat;
+  background: url("../../../assets/images/header_back.png") no-repeat;
   background-size: cover;
   overflow: hidden;
   .nav_conent {

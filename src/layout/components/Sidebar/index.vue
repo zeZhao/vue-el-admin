@@ -7,43 +7,22 @@
       @close="handleClose"
       router
     >
-      <el-menu-item index="/dataExport">
+      <el-menu-item
+        :index="item.path"
+        v-for="item in routeList"
+        :key="item.path"
+      >
         <div class="img">
           <img src="@/assets/images/export@2x.png" alt="" />
         </div>
-
-        <span slot="title">数据导出</span>
+        <span slot="title">{{ item.meta.title }}</span>
       </el-menu-item>
-      <el-menu-item index="/downloadCenter">
-        <div class="img">
-          <img src="@/assets/images/download@2x.png" alt="" />
-        </div>
-
-        <span slot="title">下载中心</span>
-      </el-menu-item>
-      <el-menu-item index="/sendReturnReport">
-        <div class="img">
-          <img src="@/assets/images/download@2x.png" alt="" />
-        </div>
-
-        <span slot="title">发送返回报告</span>
-      </el-menu-item>
-      <!-- <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>导航一</span>
-        </template>
-        <el-menu-item-group>
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
-        </el-menu-item-group>
-      </el-submenu> -->
     </el-menu>
   </div>
 </template>
 
 <script>
-// import { constantRoutes } from "@/router";
+import { constantRoutes } from "@/router";
 export default {
   data() {
     return {
@@ -60,10 +39,11 @@ export default {
       }
       return path;
     },
+    routeList() {
+      return constantRoutes.filter((v) => !v.hidden);
+    },
   },
-  mounted() {
-    // console.log(constantRoutes, "------------");
-  },
+  mounted() {},
   methods: {
     handleOpen(key, keyPath) {
       console.log(key, keyPath);

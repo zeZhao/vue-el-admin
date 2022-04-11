@@ -172,7 +172,7 @@ export default {
                 const smsToken = "token" + randomNum();
                 setStorage("token", smsToken);
                 setStorage("info", data.data);
-                this.$router.push("./dataExport");
+                this.$router.push("./aloneExport");
                 this.$message.success("登录成功");
               } else {
                 this.getCaptcha();
