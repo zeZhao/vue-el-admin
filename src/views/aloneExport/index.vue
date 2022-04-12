@@ -62,10 +62,7 @@
         <el-form-item label="手机号脱敏" prop="collectType">
           <el-select
             v-model="ruleForm.collectType"
-            multiple
-            collapse-tags
             placeholder="请选择手机号脱敏"
-            @change="collectTypeChange"
             style="height: 32px"
           >
             <el-option label="脱敏" value="1"></el-option>
@@ -738,6 +735,7 @@ export default {
   }
   ::v-deep .confirm_visible {
     height: 156px;
+    display: flex;
     .header_title {
       .title {
         font-family: PingFangSC-Medium;

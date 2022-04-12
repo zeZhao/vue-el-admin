@@ -1,7 +1,7 @@
 <template>
   <div class="NavMenu">
     <div class="nav_conent">
-      <div class="nav_conent_title">短信V2数据导出工具</div>
+      <div class="nav_conent_title">短信V3数据导出工具</div>
       <div class="nav_conent_handle clearfix">
         <div class="handle_name">
           <div class="name_img">
