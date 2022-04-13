@@ -49,7 +49,26 @@
           </el-date-picker>
         </el-form-item>
       </div>
-
+      <div class="responsive">
+        <el-form-item label="汇总类型" prop="collectType">
+          <el-select
+            v-model="ruleForm.collectType"
+            multiple
+            collapse-tags
+            placeholder="请选择汇总类型"
+            @change="collectTypeChange"
+            style="height: 32px"
+          >
+            <el-option label="内容" value="1"></el-option>
+            <el-option label="签名" value="2"></el-option>
+            <el-option label="状态码" value="3"></el-option>
+            <el-option label="按天" value="4"></el-option>
+            <el-option label="用户ID" value="5"></el-option>
+            <el-option label="运营商" value="6"></el-option>
+            <el-option label="省份" value="7"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
       <div class="responsive">
         <el-form-item label="补发" prop="resend">
           <el-select v-model="ruleForm.resend" placeholder="请选择导出补发">
@@ -58,18 +77,22 @@
           </el-select>
         </el-form-item>
       </div>
-      <div class="responsive">
-        <el-form-item label="手机号脱敏" prop="collectType">
-          <el-select
-            v-model="ruleForm.collectType"
-            placeholder="请选择手机号脱敏"
-            style="height: 32px"
-          >
-            <el-option label="脱敏" value="1"></el-option>
-            <el-option label="不脱敏" value="2"></el-option>
-          </el-select>
-        </el-form-item>
-      </div>
+      <!-- <el-row :gutter="16" style="height: 185px; width: 100%">
+        <el-col :md="6" :lg="8" :xl="4"> </el-col>
+        <el-col :md="6" :lg="8" :xl="4">
+          
+        </el-col>
+        <el-col :md="6" :lg="8" :xl="4">
+          
+        </el-col>
+        <el-col :md="6" :lg="8" :xl="4">
+          
+        </el-col>
+        <el-col :md="12" :lg="8" :xl="4">
+          
+        </el-col>
+      </el-row> -->
+      <!-- <el-row :gutter="16" style="height: 85px; width: 100%"> </el-row> -->
 
       <div class="form_item">
         <span class="line"></span>
@@ -107,7 +130,7 @@
           type="primary"
           style="padding: 0"
           @click="submitForm('ruleForm')"
-          >生成</el-button
+          >保存并导出</el-button
         >
       </el-form-item>
     </el-form>
@@ -204,7 +227,7 @@ export default {
         exportHeader: [],
         queryType: "2",
         queryId: "",
-        resend: "1",
+        resend: "2",
       },
       label: "用户ID",
 
@@ -257,10 +280,10 @@ export default {
         { key: 3, value: "提交时间", disabled: false },
         { key: 4, value: "发送时间", disabled: false },
         { key: 5, value: "运营商", disabled: false },
-        // { key: 6, value: "签名", disabled: false },
+        { key: 6, value: "签名", disabled: false },
         { key: 7, value: "短信内容", disabled: false },
-        { key: 9, value: "内容长度", disabled: false },
         { key: 8, value: "手机号码", disabled: false },
+        { key: 9, value: "内容长度", disabled: false },
         { key: 10, value: "状态码", disabled: false },
         { key: 11, value: "省份", disabled: false },
         { key: 12, value: "提交条数", disabled: false },
@@ -317,8 +340,6 @@ export default {
         }
       });
     },
-
-    new() {},
 
     //验证权限
     submitJurisdiction(formName) {
@@ -735,7 +756,6 @@ export default {
   }
   ::v-deep .confirm_visible {
     height: 156px;
-    display: flex;
     .header_title {
       .title {
         font-family: PingFangSC-Medium;
