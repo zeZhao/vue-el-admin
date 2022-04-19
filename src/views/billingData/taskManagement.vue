@@ -19,9 +19,9 @@
           <el-select v-model="searchForm.month">
             <el-option
               v-for="item in monthList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              :key="item.id"
+              :label="item.month"
+              :value="item.month"
             ></el-option>
           </el-select>
         </el-form-item>
@@ -41,7 +41,17 @@
         <el-table-column prop="month" label="月份" />
         <el-table-column prop="id" label="任务ID" />
         <el-table-column prop="createTime" label="创建时间" />
-        <el-table-column prop="month" label="任务名称" />
+        <el-table-column prop="type" label="任务名称">
+          <template slot-scope="{ row }">
+            <span v-if="row.type == 1">拆分用户数据</span>
+            <span v-if="row.type == 2">拆分网关数据</span>
+            <span v-if="row.type == 3">通道迁移</span>
+            <span v-if="row.type == 4">账户迁移</span>
+            <span v-if="row.type == 5">添加数据</span>
+            <span v-if="row.type == 6">修改用户单价</span>
+            <span v-if="row.type == 7">修改通道单</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="userId" label="账户编号" />
         <el-table-column prop="userName" label="账户名称" />
         <el-table-column prop="uprice" label="账户平均单价(分)" />
@@ -60,6 +70,7 @@
             <span v-if="row.status === 2">执行中</span>
             <span v-if="row.status === 3">通过</span>
             <span v-if="row.status === 4">撤回</span>
+            <span v-if="row.status === 5">失败</span>
           </template>
         </el-table-column>
         <el-table-column prop="proceeds" label="操作" fixed="right" width="138">
@@ -75,8 +86,12 @@
               @confirm="confirmExecute(row)"
               @cancel="executeVisible = false"
             >
-              <span slot="reference" type="text" @click="executeVisible = true"
-                >执行</span
+              <el-button
+                slot="reference"
+                type="text"
+                :disabled="row.status !== 0"
+                @click="executeVisible = true"
+                >执行</el-button
               >
             </el-popconfirm>
             <el-popconfirm
@@ -90,12 +105,13 @@
               @confirm="confirmRevoke(row)"
               @cancel="revokeVisible = false"
             >
-              <span
+              <el-button
                 slot="reference"
                 type="text"
                 @click="revokeVisible = true"
+                :disabled="row.status !== 0 || row.status !== 5"
                 style="color: #f54945; padding-left: 24px"
-                >撤销</span
+                >撤销</el-button
               >
             </el-popconfirm>
           </template>
@@ -150,7 +166,7 @@ export default {
   methods: {
     //执行
     confirmExecute(row) {
-      addTasksToWaiting({ id: row.id }).then((res) => {
+      addTasksToWaiting({ ...row }).then((res) => {
         if (res.code === 200) {
           this.$message.success("操作成功");
           this.getQueryByPage();
@@ -159,7 +175,7 @@ export default {
     },
     //撤销
     confirmRevoke(row) {
-      updateStatus({ id: row.id }).then((res) => {
+      updateStatus({ ...row }).then((res) => {
         if (res.code === 200) {
           this.$message.success("操作成功");
           this.getQueryByPage();
