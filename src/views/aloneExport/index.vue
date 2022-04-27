@@ -33,6 +33,16 @@
           ></el-input>
         </el-form-item>
       </div>
+      <div class="responsive" v-show="ruleForm.queryType == 1">
+        <el-form-item label="多用户" prop="queryId">
+          <el-input
+            v-model="ruleForm.queryId"
+            maxlength="50"
+            show-word-limit
+            placeholder="请输入多个用户ID，用英文逗号隔开"
+          ></el-input>
+        </el-form-item>
+      </div>
       <div class="responsive">
         <el-form-item label="选择时间" prop="time">
           <el-date-picker
@@ -43,7 +53,7 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            value-format="yyyy-MM-dd"
+            value-format="yyyy/MM/dd"
             :picker-options="pickerOptions"
           >
           </el-date-picker>
@@ -178,6 +188,37 @@
         >
       </span>
     </el-dialog>
+    <div class="form_item">
+      <span class="line"></span>
+      <span class="title">样式预览</span>
+    </div>
+    <div class="tableTit">
+      {{ ruleForm.time[0] }}
+      <span v-show="ruleForm.time[0]">-</span>
+      {{ ruleForm.time[1] }}数据详单
+    </div>
+    <el-table
+      :data="tableData"
+      style="width: 100%,height:200px"
+      :show-summary="true"
+      border
+      :summary-method="getSummaries"
+      sum-text="汇总"
+      :header-cell-style="{
+        background: '#FAFAFA',
+        borderBottom: '1px solid #EFF0F1',
+      }"
+    >
+      <el-table-column
+        width="102px"
+        v-for="item in tableColumn"
+        :key="item"
+        :label="tableLabel(item)"
+        prop="item"
+        align="center"
+      >
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -197,6 +238,7 @@ export default {
       callback();
     };
     return {
+      tableData: [{ item: "" }],
       //表单数据
       ruleForm: {
         collectType: [],
@@ -286,13 +328,65 @@ export default {
       //确认导出
       confirmVisible: false,
       currentDisabledData: [],
+      tableColumn: [],
     };
   },
   created() {},
   mounted() {},
   computed: {},
   methods: {
-    exportHeaderHandle(val) {},
+    getSummaries(param) {
+      const { columns, data } = param;
+      let sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "汇总";
+          return;
+        } else {
+          sums[index] = "";
+          return;
+        }
+      });
+      return sums;
+    },
+    tableLabel(item) {
+      let str = "";
+      this.exportHeaderData.forEach((v) => {
+        if (item === "") {
+          str = "";
+        } else if (v.key === item) {
+          str = v.value;
+        }
+      });
+      return str;
+    },
+    exportHeaderHandle(val) {
+      //如先选择提交条数、发送条数、成功条数、计费条数、失败条数、未知条数时要在第二列显示，
+      //避免导出时汇总的数据被汇总两个字占用
+      let data = [];
+      let arr = [12, 13, 14, 15, 16, 17];
+      if (val && val.length > 0) {
+        val.forEach((v) => {
+          //判断当前选中是否为条数
+          if (arr.includes(val[val.length - 1]) && val.length === 1) {
+            data = ["", ...val];
+          } else {
+            //判断之前选择的第一个是否为条数以免覆盖
+            if (
+              (data[0] === "" && arr.includes(data[1])) ||
+              arr.includes(data[0])
+            ) {
+              data = ["", ...val];
+            } else {
+              data = val;
+            }
+          }
+        });
+      } else {
+        data = [];
+      }
+      this.tableColumn = JSON.parse(JSON.stringify(data));
+    },
 
     queryType(val) {
       if (val === "2") {
@@ -346,75 +440,6 @@ export default {
       this.jurisdictionVisible = false;
       this.confirmVisible = false;
     },
-    //根据选中汇总类型对内容进行处理
-    collectTypeChange(value) {
-      this.currentDisabledData = [];
-      let exportHeaderData = this.ruleForm.exportHeader;
-      this.exportHeaderData.forEach((o) => {
-        o.disabled = true;
-      });
-
-      //汇总数据中可选择的字段
-      const disabledDataList = [
-        // { key: "1", value: [3, 4, 5, 6, 8, 10, 11, 18] }, //内容
-        { key: "1", value: [1, 2, 7, 9, 12, 13, 14, 15, 16, 17] }, //内容
-        // { key: "2", value: [3, 4, 5, 7, 8, 9, 10, 11, 18] }, //签名
-        { key: "2", value: [1, 2, 6, 12, 13, 14, 15, 16, 17] }, //签名
-        // { key: "3", value: [3, 4, 5, 6, 7, 8, 9, 11, 18] }, //状态码
-        { key: "3", value: [1, 2, 10, 12, 13, 14, 15, 16, 17] }, //状态码
-        // { key: "4", value: [3, 4, 5, 6, 7, 8, 9, 10, 11, 18] }, //按天
-        { key: "4", value: [1, 2, 12, 13, 14, 15, 16, 17] }, //按天
-        // { key: "5", value: [] }, //用户ID
-        {
-          key: "5",
-          value: [
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-          ],
-        }, //用户ID
-        // { key: "6", value: [3, 4, 6, 7, 8, 9, 10, 11, 18] }, //运营商
-        { key: "6", value: [1, 2, 5, 12, 13, 14, 15, 16, 17] }, //运营商
-        // { key: "7", value: [3, 4, 5, 6, 7, 8, 9, 10, 18] }, //省份
-        { key: "7", value: [1, 2, 11, 12, 13, 14, 15, 16, 17] }, //省份
-      ];
-      if (value && value.length != 0) {
-        value.forEach((item) => {
-          disabledDataList.forEach((i) => {
-            if (item === i.key) {
-              i.value.forEach((t) => {
-                this.exportHeaderData.forEach((o) => {
-                  if (t === o.key) {
-                    o.disabled = false;
-                    this.currentDisabledData.push(o.key);
-                  } else {
-                    exportHeaderData.includes(o.key)
-                      ? exportHeaderData.splice(
-                          exportHeaderData.indexOf(o.key),
-                          1
-                        )
-                      : exportHeaderData;
-                  }
-                });
-              });
-            }
-          });
-        });
-      } else {
-        this.exportHeaderData.forEach((o) => {
-          o.disabled = false;
-        });
-      }
-
-      this.ruleForm.exportHeader = exportHeaderData;
-
-      // const content = [3, 4, 5, 6, 8, 9, 10, 11, 18]; //内容
-      // const sign = [3, 4, 5, 7, 8, 9, 10, 11, 18]; //签名
-      // const statusCode = [3, 4, 5, 6, 7, 8, 9, 11, 18]; //状态码
-      // const daily = [3, 4, 8, 10, 11, 18]; //按天
-      // const userId = []; //用户ID
-      // const operator = [3, 4, 6, 8, 9, 10, 18]; //运营商
-      // const province = [3, 4, 6, 8, 9, 10, 18]; //省份
-      // console.log(value, "------------value");
-    },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -465,121 +490,13 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
       this.label = "用户ID";
+      this.tableColumn = [];
       this.exportHeaderData.forEach((o) => {
         o.disabled = false;
       });
     },
-    getSingular(newArr, oldArr) {
-      let num = null;
-      oldArr.forEach((i) => {
-        let flag = false;
-        newArr.forEach((t) => {
-          if (i == t) {
-            flag = true;
-            return;
-          }
-        });
-        if (!flag) {
-          num = i;
-        }
-      });
-      return num;
-    },
   },
-  watch: {
-    "ruleForm.exportHeader": {
-      handler(val, oldVal) {
-        this.$nextTick(() => {
-          let newVal = val ? val[val.length - 1] : null;
-          let oldValue = null;
-
-          // 如果oldValue不为null 则是取消选中
-          if (oldVal && val) {
-            oldValue =
-              oldVal.length > val.length ? this.getSingular(val, oldVal) : null;
-          }
-          //当前未禁用的数据
-          let arr = this.currentDisabledData;
-          let collectType = this.ruleForm.collectType;
-          if (
-            newVal === 4 ||
-            newVal === 11 ||
-            newVal === 13 ||
-            newVal === 12 ||
-            oldValue === 4 ||
-            oldValue === 11 ||
-            oldValue === 13 ||
-            oldValue === 12
-          ) {
-            if (newVal === 12) {
-              this.exportHeaderData.forEach((item) => {
-                if (item.key === 13 || item.key === 11 || item.key === 4) {
-                  item.disabled = true;
-                }
-              });
-            } else if (newVal === 4 || newVal === 11 || newVal === 13) {
-              this.exportHeaderData.forEach((item) => {
-                if (item.key === 12) {
-                  item.disabled = true;
-                }
-              });
-            } else {
-              if (!val.includes(12)) {
-                // if (oldValue === 12) {
-                this.exportHeaderData.forEach((item) => {
-                  //判断是否选择汇总类型
-                  if (collectType && collectType.length !== 0) {
-                    if (arr.includes(13)) {
-                      if (item.key === 13) {
-                        item.disabled = false;
-                      }
-                    }
-                    if (arr.includes(11)) {
-                      if (item.key === 11) {
-                        item.disabled = false;
-                      }
-                    }
-                    if (arr.includes(4)) {
-                      if (item.key === 4) {
-                        item.disabled = false;
-                      }
-                    }
-                  } else {
-                    if (item.key === 4 || item.key === 11 || item.key === 13) {
-                      item.disabled = false;
-                    }
-                  }
-                });
-              }
-              if (oldValue === 4 || oldValue === 11 || oldValue === 13) {
-                if (
-                  !val.includes(4) &&
-                  !val.includes(11) &&
-                  !val.includes(13)
-                ) {
-                  this.exportHeaderData.forEach((item) => {
-                    if (collectType && collectType.length !== 0) {
-                      if (arr.includes(12)) {
-                        if (item.key === 12) {
-                          item.disabled = false;
-                        }
-                      }
-                    } else {
-                      if (item.key === 12) {
-                        item.disabled = false;
-                      }
-                    }
-                  });
-                }
-              }
-            }
-          }
-        });
-      },
-      deep: true,
-      immediate: true,
-    },
-  },
+  watch: {},
 };
 </script>
 <style lang="scss" scoped>
@@ -588,6 +505,40 @@ export default {
   height: calc(100vh - 64px);
   background: #fff;
   border-top: 1px solid #fff;
+  ::v-deep .el-table__body-wrapper {
+    // display: none;
+  }
+  .tableTit {
+    width: 100%;
+    height: 70px;
+    text-align: center;
+    line-height: 70px;
+    border: 1px solid #ebeef5;
+    border-bottom: none;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    font-size: 14px;
+    color: #2b2f36;
+  }
+  .form_item {
+    margin-top: 32px;
+    margin-bottom: 26px;
+    .line {
+      width: 4px;
+      height: 16px;
+      background: #1890ff;
+      display: inline-block;
+    }
+    .title {
+      width: 80px;
+      height: 22px;
+      font-family: PingFangSC-Medium;
+      font-weight: Medium;
+      font-size: 16px;
+      color: #2b2f36;
+      padding-left: 8px;
+    }
+  }
   .demo_ruleForm {
     .is-required {
       ::v-deep .el-form-item__label::before {
@@ -626,25 +577,6 @@ export default {
       width: 100%;
     }
 
-    .form_item {
-      margin-top: 32px;
-      margin-bottom: 26px;
-      .line {
-        width: 4px;
-        height: 16px;
-        background: #1890ff;
-        display: inline-block;
-      }
-      .title {
-        width: 80px;
-        height: 22px;
-        font-family: PingFangSC-Medium;
-        font-weight: Medium;
-        font-size: 16px;
-        color: #2b2f36;
-        padding-left: 8px;
-      }
-    }
     .responsive {
       width: 32%;
       display: inline-block;
