@@ -66,6 +66,14 @@ export const constantRoutes = [
     }
   },
   {
+    path: '/bajData',
+    name: 'bajData',
+    component: () => import(/* webpackChunkName: "about" */  '@/views/bajData/index.vue'),
+    meta: {
+      title: '百安居'
+    }
+  },
+  {
     path: '/downloadCenter',
     name: 'downloadCenter',
     component: () => import(/* webpackChunkName: "about" */ '../views/downloadCenter/index.vue'),
@@ -79,6 +87,14 @@ export const constantRoutes = [
     component: () => import(/* webpackChunkName: "about" */ '../views/sendReturnReport/index.vue'),
     meta: {
       title: '发送记录'
+    }
+  },
+  {
+    path: '/utilityClass',
+    name: 'utilityClass',
+    component: () => import(/* webpackChunkName: "about" */ '../views/utilityClass/index.vue'),
+    meta: {
+      title: '工具类'
     }
   },
 ]
