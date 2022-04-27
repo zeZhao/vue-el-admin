@@ -1,50 +1,14 @@
 <template>
   <div class="downloadCenter">
     <div class="search">
-      <el-form
-        :model="searchForm"
-        ref="searchForm"
-        :inline="true"
-        label-width="80px"
-      >
-        <el-form-item label="账户编号：">
+      <el-form :model="searchForm" :inline="true">
+        <el-form-item label="">
           <el-input
-            v-model="searchForm.userid"
-            maxlength="6"
-            placeholder="请输入账户编号"
+            v-model="searchForm.createUser"
+            placeholder="请输入发送账号"
           ></el-input>
         </el-form-item>
-        <el-form-item label="手机号：">
-          <el-input
-            v-model="searchForm.mobile"
-            maxlength="11"
-            placeholder="请输入手机号"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="通道编号：">
-          <el-input
-            v-model="searchForm.gateway"
-            maxlength="5"
-            placeholder="请输入通道编号"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="状态：">
-          <el-input
-            v-model="searchForm.status"
-            maxlength="10"
-            placeholder="请输入状态"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="月份：">
-          <el-date-picker
-            v-model="searchForm.year"
-            type="month"
-            value-format="yyyy-MM"
-            placeholder="选择月"
-          >
-          </el-date-picker>
-        </el-form-item>
-        <el-form-item label="发送日期：">
+        <el-form-item label="">
           <el-date-picker
             v-model="searchForm.time"
             type="datetimerange"
@@ -55,11 +19,20 @@
           >
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="">
+          <el-input
+            v-model="searchForm.downloadContent"
+            placeholder="请输入邮箱"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="">
+          <el-input
+            v-model="searchForm.mobile"
+            placeholder="请输入手机号"
+          ></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="onReset('searchForm')"
-            >重置</el-button
-          >
         </el-form-item>
       </el-form>
     </div>
@@ -72,32 +45,28 @@
       }"
       highlight-current-row
     >
-      <el-table-column prop="corporateid" label="商户编号"> </el-table-column>
-      <el-table-column prop="userid" label="账户编号"> </el-table-column>
-      <el-table-column prop="username" label="账户名称"> </el-table-column>
-      <el-table-column prop="code" label="特服号"> </el-table-column>
-      <el-table-column prop="content" label="内容"> </el-table-column>
-      <el-table-column prop="mobile" label="手机号"> </el-table-column>
-      <el-table-column prop="province" label="省份"> </el-table-column>
-      <el-table-column prop="operaid" label="运营商">
+      <el-table-column prop="createUser" label="发送账号" width="104">
+      </el-table-column>
+      <el-table-column prop="submitTime" label="发送时间" width="180">
+      </el-table-column>
+      <el-table-column prop="downloadNum" label="发送邮箱" width="138">
+      </el-table-column>
+      <el-table-column prop="downloadNum" label="发送手机号" width="138">
+      </el-table-column>
+      <el-table-column prop="downloadContent" label="发送内容" tooltip-effect>
+      </el-table-column>
+      <el-table-column prop="time" label="导出时间" tooltip-effect>
+      </el-table-column>
+      <el-table-column prop="address" fixed="right" label="状态" width="120">
         <template slot-scope="{ row }">
-          <span v-if="row.operaid == 0">非法</span>
-          <span v-if="row.operaid == 1">移动</span>
-          <span v-if="row.operaid == 2">联通</span>
-          <span v-if="row.operaid == 3">电信</span>
-          <span v-if="row.operaid == 4">国际</span>
+          <el-link :underline="false" type="primary" v-show="row.status === 1"
+            >成功</el-link
+          >
+          <el-link :underline="false" type="danger" v-show="row.status === 2"
+            >失败</el-link
+          >
         </template>
       </el-table-column>
-      <el-table-column prop="status" label="状态"> </el-table-column>
-      <el-table-column prop="gateway" label="通道"> </el-table-column>
-      <el-table-column prop="submittime" label="提交时间"> </el-table-column>
-      <el-table-column prop="createtime" label="发送时间"> </el-table-column>
-      <el-table-column prop="returntime" label="返回报告时间">
-      </el-table-column>
-      <el-table-column prop="receivetime" label="手机接收时间">
-      </el-table-column>
-      <el-table-column prop="statusj" label="通道状态"> </el-table-column>
-      <el-table-column prop="cid" label="CID"> </el-table-column>
     </el-table>
     <el-pagination
       background
@@ -113,18 +82,16 @@
 </template>
 
 <script>
-import { queryByPage } from "@/api/sendReturnReport";
+import { queryByPage, download, cancelDownload } from "@/api/sysDownLoadLog";
 
 export default {
   components: {},
   data() {
     return {
       searchForm: {
-        userid: "",
-        gateway: "",
+        createUser: "",
+        downloadContent: "",
         mobile: "",
-        status: "",
-        year: "",
         time: [],
         pageNumber: 1,
         pageSize: 10,
@@ -134,27 +101,12 @@ export default {
       total: 0,
     };
   },
-  created() {
-    // this.searchForm.year = this.getLastMonth();
-    this.searchForm.year = new Date(
-      new Date().setMonth(new Date().getMonth() - 1)
-    );
-  },
+  created() {},
   mounted() {
     this.getQueryByPage();
   },
   computed: {},
   methods: {
-    getLastMonth() {
-      let date = new Date();
-      let year = date.getFullYear();
-      let month = date.getMonth();
-      if (month === 0) {
-        year = year - 1;
-        month = 12;
-      }
-      return `${year}:${month}`;
-    },
     downloadHandle(row) {
       const { id, createUser, submitTime } = row;
       let time = new Date(submitTime).Format("yyyyMMddhhmmss");
@@ -191,44 +143,26 @@ export default {
     getQueryByPage() {
       const { time } = this.searchForm;
       let form = Object.assign(this.searchForm, {
-        stratTime: time ? time[0] : "",
-        endTime: time ? time[1] : "",
+        submitStartDate: time ? time[0] : "",
+        submitEndDate: time ? time[1] : "",
       });
       queryByPage(form).then((res) => {
         if (res.code === 200) {
           this.tableData = res.data.list;
           this.total = res.data.total;
           this.tableData.forEach((item) => {
-            item.createtime = new Date(item.createtime).Format(
-              "yyyy-MM-dd hh:mm:ss"
-            );
-            item.receivetime = new Date(item.receivetime).Format(
-              "yyyy-MM-dd hh:mm:ss"
-            );
-            item.returntime = new Date(item.returntime).Format(
-              "yyyy-MM-dd hh:mm:ss"
-            );
-            item.submittime = new Date(item.submittime).Format(
-              "yyyy-MM-dd hh:mm:ss"
-            );
+            if (item.submitTime) {
+              item.submitTime = new Date(item.submitTime).Format(
+                "yyyy-MM-dd hh:mm:ss"
+              );
+            }
           });
         }
       });
     },
     onSubmit() {
       this.getQueryByPage();
-    },
-    onReset(formName) {
-      for (let key in this.searchForm) {
-        if (key !== "pageSize" || key !== "pageNumber") {
-          if (key === "time") {
-            this.searchForm[key] = [];
-          } else {
-            this.searchForm[key] = "";
-          }
-        }
-      }
-      // this.$refs[formName].resetFields();
+      console.log("submit!");
     },
   },
   watch: {},
