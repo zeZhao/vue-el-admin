@@ -33,6 +33,16 @@
           ></el-input>
         </el-form-item>
       </div>
+      <div class="responsive" v-show="ruleForm.queryType == 1">
+        <el-form-item label="多用户" prop="queryId">
+          <el-input
+            v-model="ruleForm.queryId"
+            maxlength="50"
+            show-word-limit
+            placeholder="请输入多个用户ID，用英文逗号隔开"
+          ></el-input>
+        </el-form-item>
+      </div>
       <div class="responsive">
         <el-form-item label="选择时间" prop="time">
           <el-date-picker
@@ -50,30 +60,93 @@
         </el-form-item>
       </div>
       <div class="responsive">
-        <el-form-item label="汇总类型" prop="collectType">
-          <el-select
-            v-model="ruleForm.collectType"
-            multiple
-            collapse-tags
-            placeholder="请选择汇总类型"
-            @change="collectTypeChange"
-            style="height: 32px"
-          >
-            <el-option label="内容" value="1"></el-option>
-            <el-option label="签名" value="2"></el-option>
-            <el-option label="状态码" value="3"></el-option>
-            <el-option label="按天" value="4"></el-option>
-            <el-option label="用户ID" value="5"></el-option>
-            <el-option label="运营商" value="6"></el-option>
-            <el-option label="省份" value="7"></el-option>
-          </el-select>
-        </el-form-item>
-      </div>
-      <div class="responsive">
         <el-form-item label="补发" prop="resend">
           <el-select v-model="ruleForm.resend" placeholder="请选择导出补发">
             <el-option label="有" value="2"></el-option>
             <el-option label="无" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="responsive">
+        <el-form-item label="显示企业ID" prop="resend">
+          <el-select v-model="ruleForm.resend" placeholder="请选择显示企业ID">
+            <el-option label="显示" value="2"></el-option>
+            <el-option label="不显示" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="responsive">
+        <el-form-item label="显示用户ID" prop="resend">
+          <el-select v-model="ruleForm.resend" placeholder="请选择显示用户ID">
+            <el-option label="显示" value="2"></el-option>
+            <el-option label="不显示" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="responsive">
+        <el-form-item label="数据汇总" prop="collectType">
+          <el-select
+            v-model="ruleForm.collectType"
+            multiple
+            collapse-tags
+            placeholder="请选择数据汇总"
+            style="height: 32px"
+          >
+            <el-option label="汇总" value="1"></el-option>
+            <el-option label="不汇总" value="2"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="responsive">
+        <el-form-item label="数据限制" prop="resend">
+          <el-select v-model="ruleForm.resend" placeholder="请选择数据限制">
+            <el-option label="发送条数少于100不导出" value="2"></el-option>
+            <el-option label="提交条数少于100不导出" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="responsive">
+        <el-form-item label="成功率调整" prop="resend">
+          <el-select v-model="ruleForm.resend" placeholder="请选择成功率调整">
+            <el-option label="调整" value="2"></el-option>
+            <el-option label="不调整" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="responsive" v-show="ruleForm.queryType == 1">
+        <el-form-item label="成功率算法" prop="queryId">
+          <el-select v-model="ruleForm.resend" placeholder="请选择成功率算法">
+            <el-option label="成功数/发送数" value="2"></el-option>
+            <el-option label="成功数/提交数" value="1"></el-option>
+          </el-select>
+        </el-form-item>
+      </div>
+      <div class="responsive" v-show="ruleForm.queryType == 1">
+        <el-form-item label="区间值" prop="queryId">
+          <div class="section">
+            <el-input
+              v-model="ruleForm.queryId"
+              placeholder="区间低值"
+            ></el-input>
+            <span>-</span>
+            <el-input
+              v-model="ruleForm.queryId"
+              placeholder="区间高值"
+            ></el-input>
+          </div>
+        </el-form-item>
+      </div>
+      <div class="responsive" v-show="ruleForm.queryType == 1">
+        <el-form-item label="成功率调整内容" prop="queryId">
+          <el-select
+            v-model="ruleForm.resend"
+            placeholder="请选择成功率调整内容"
+          >
+            <el-option label="提交条数" value="1"></el-option>
+            <el-option label="发送条数" value="2"></el-option>
+            <el-option label="成功条数" value="3"></el-option>
+            <el-option label="失败条数" value="4"></el-option>
+            <el-option label="未知条数" value="5"></el-option>
           </el-select>
         </el-form-item>
       </div>
@@ -84,10 +157,7 @@
       </div>
       <div class="checkbox">
         <el-form-item prop="exportHeader">
-          <el-checkbox-group
-            v-model="ruleForm.summaryCondition"
-            @change="exportHeaderHandle"
-          >
+          <el-checkbox-group v-model="ruleForm.summaryCondition">
             <el-checkbox-button
               v-for="item in summaryConditionData"
               :key="item.key"
@@ -132,11 +202,9 @@
 
       <el-form-item>
         <el-button @click="resetForm('ruleForm')">重置</el-button>
-        <el-button
-          type="primary"
-          style="padding: 0"
-          @click="submitForm('ruleForm')"
-          >保存并导出</el-button
+        <el-button @click="resetForm('ruleForm')">生成明细</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')"
+          >生成账单和明细</el-button
         >
       </el-form-item>
     </el-form>
@@ -207,6 +275,37 @@
         >
       </span>
     </el-dialog>
+    <div class="form_item">
+      <span class="line"></span>
+      <span class="title">样式预览</span>
+    </div>
+    <div class="tableTit">
+      {{ ruleForm.time[0] }}
+      <span v-show="ruleForm.time[0]">-</span>
+      {{ ruleForm.time[1] }}数据详单
+    </div>
+    <el-table
+      :data="tableData"
+      style="width: 100%,height:200px"
+      :show-summary="true"
+      border
+      :summary-method="getSummaries"
+      sum-text="汇总"
+      :header-cell-style="{
+        background: '#FAFAFA',
+        borderBottom: '1px solid #EFF0F1',
+      }"
+    >
+      <el-table-column
+        width="102px"
+        v-for="item in tableColumn"
+        :key="item"
+        :label="tableLabel(item)"
+        prop="item"
+        align="center"
+      >
+      </el-table-column>
+    </el-table>
   </div>
 </template>
 
@@ -290,24 +389,23 @@ export default {
 
       // 导出表头内容
       exportHeaderData: [
-        { key: 1, value: "企业ID", disabled: false },
-        { key: 2, value: "用户ID", disabled: false },
-        { key: 3, value: "提交时间", disabled: false },
-        { key: 4, value: "发送时间", disabled: false },
-        { key: 5, value: "运营商", disabled: false },
-        { key: 6, value: "签名", disabled: false },
-        { key: 7, value: "短信内容", disabled: false },
-        { key: 8, value: "手机号码", disabled: false },
-        { key: 9, value: "内容长度", disabled: false },
-        { key: 10, value: "状态码", disabled: false },
-        { key: 11, value: "省份", disabled: false },
-        { key: 12, value: "提交条数", disabled: false },
-        { key: 13, value: "发送条数", disabled: false },
-        { key: 14, value: "成功条数", disabled: false },
-        { key: 15, value: "计费条数", disabled: false },
-        { key: 16, value: "失败条数", disabled: false },
-        { key: 17, value: "未知条数", disabled: false },
-        { key: 18, value: "CID", disabled: false },
+        { key: 1, value: "提交时间", disabled: false },
+        { key: 2, value: "发送时间", disabled: false },
+        { key: 3, value: "提交条数", disabled: false },
+        { key: 4, value: "发送条数", disabled: false },
+        { key: 5, value: "成功条数", disabled: false },
+        { key: 6, value: "失败条数", disabled: false },
+        { key: 7, value: "未知条数", disabled: false },
+        { key: 8, value: "计费条数", disabled: false },
+        { key: 9, value: "单价", disabled: false },
+        { key: 10, value: "结算金额", disabled: false },
+        { key: 11, value: "条数", disabled: false },
+        { key: 12, value: "占比", disabled: false },
+        { key: 13, value: "错误解释", disabled: false },
+        { key: 14, value: "长度", disabled: false },
+        { key: 15, value: "成功率", disabled: false },
+        { key: 16, value: "定时时间", disabled: false },
+        { key: 17, value: "定时状态", disabled: false },
       ],
 
       //权限验证弹窗数据
@@ -321,16 +419,70 @@ export default {
         ],
       },
 
-      //确认导出
+      //确认导出z
       confirmVisible: false,
       currentDisabledData: [],
+
+      tableData: [{ item: "" }],
+      tableColumn: [],
     };
   },
   created() {},
   mounted() {},
   computed: {},
   methods: {
-    exportHeaderHandle(val) {},
+    getSummaries(param) {
+      const { columns, data } = param;
+      let sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = "汇总";
+          return;
+        } else {
+          sums[index] = "";
+          return;
+        }
+      });
+      return sums;
+    },
+    tableLabel(item) {
+      let str = "";
+      this.exportHeaderData.forEach((v) => {
+        if (item === "") {
+          str = "";
+        } else if (v.key === item) {
+          str = v.value;
+        }
+      });
+      return str;
+    },
+    exportHeaderHandle(val) {
+      //如先选择提交条数、发送条数、成功条数、计费条数、失败条数、未知条数时要在第二列显示，
+      //避免导出时汇总的数据被汇总两个字占用
+      let data = [];
+      let arr = [12, 13, 14, 15, 16, 17];
+      if (val && val.length > 0) {
+        val.forEach((v) => {
+          //判断当前选中是否为条数
+          if (arr.includes(val[val.length - 1]) && val.length === 1) {
+            data = ["", ...val];
+          } else {
+            //判断之前选择的第一个是否为条数以免覆盖
+            if (
+              (data[0] === "" && arr.includes(data[1])) ||
+              arr.includes(data[0])
+            ) {
+              data = ["", ...val];
+            } else {
+              data = val;
+            }
+          }
+        });
+      } else {
+        data = [];
+      }
+      this.tableColumn = JSON.parse(JSON.stringify(data));
+    },
 
     queryType(val) {
       if (val === "2") {
@@ -381,75 +533,6 @@ export default {
     handleClose() {
       this.jurisdictionVisible = false;
       this.confirmVisible = false;
-    },
-    //根据选中汇总类型对内容进行处理
-    collectTypeChange(value) {
-      this.currentDisabledData = [];
-      let exportHeaderData = this.ruleForm.exportHeader;
-      this.exportHeaderData.forEach((o) => {
-        o.disabled = true;
-      });
-
-      //汇总数据中可选择的字段
-      const disabledDataList = [
-        // { key: "1", value: [3, 4, 5, 6, 8, 10, 11, 18] }, //内容
-        { key: "1", value: [1, 2, 7, 9, 12, 13, 14, 15, 16, 17] }, //内容
-        // { key: "2", value: [3, 4, 5, 7, 8, 9, 10, 11, 18] }, //签名
-        { key: "2", value: [1, 2, 6, 12, 13, 14, 15, 16, 17] }, //签名
-        // { key: "3", value: [3, 4, 5, 6, 7, 8, 9, 11, 18] }, //状态码
-        { key: "3", value: [1, 2, 10, 12, 13, 14, 15, 16, 17] }, //状态码
-        // { key: "4", value: [3, 4, 5, 6, 7, 8, 9, 10, 11, 18] }, //按天
-        { key: "4", value: [1, 2, 12, 13, 14, 15, 16, 17] }, //按天
-        // { key: "5", value: [] }, //用户ID
-        {
-          key: "5",
-          value: [
-            1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-          ],
-        }, //用户ID
-        // { key: "6", value: [3, 4, 6, 7, 8, 9, 10, 11, 18] }, //运营商
-        { key: "6", value: [1, 2, 5, 12, 13, 14, 15, 16, 17] }, //运营商
-        // { key: "7", value: [3, 4, 5, 6, 7, 8, 9, 10, 18] }, //省份
-        { key: "7", value: [1, 2, 11, 12, 13, 14, 15, 16, 17] }, //省份
-      ];
-      if (value && value.length != 0) {
-        value.forEach((item) => {
-          disabledDataList.forEach((i) => {
-            if (item === i.key) {
-              i.value.forEach((t) => {
-                this.exportHeaderData.forEach((o) => {
-                  if (t === o.key) {
-                    o.disabled = false;
-                    this.currentDisabledData.push(o.key);
-                  } else {
-                    exportHeaderData.includes(o.key)
-                      ? exportHeaderData.splice(
-                          exportHeaderData.indexOf(o.key),
-                          1
-                        )
-                      : exportHeaderData;
-                  }
-                });
-              });
-            }
-          });
-        });
-      } else {
-        this.exportHeaderData.forEach((o) => {
-          o.disabled = false;
-        });
-      }
-
-      this.ruleForm.exportHeader = exportHeaderData;
-
-      // const content = [3, 4, 5, 6, 8, 9, 10, 11, 18]; //内容
-      // const sign = [3, 4, 5, 7, 8, 9, 10, 11, 18]; //签名
-      // const statusCode = [3, 4, 5, 6, 7, 8, 9, 11, 18]; //状态码
-      // const daily = [3, 4, 8, 10, 11, 18]; //按天
-      // const userId = []; //用户ID
-      // const operator = [3, 4, 6, 8, 9, 10, 18]; //运营商
-      // const province = [3, 4, 6, 8, 9, 10, 18]; //省份
-      // console.log(value, "------------value");
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -522,108 +605,46 @@ export default {
       return num;
     },
   },
-  watch: {
-    "ruleForm.exportHeader": {
-      handler(val, oldVal) {
-        this.$nextTick(() => {
-          let newVal = val ? val[val.length - 1] : null;
-          let oldValue = null;
-
-          // 如果oldValue不为null 则是取消选中
-          if (oldVal && val) {
-            oldValue =
-              oldVal.length > val.length ? this.getSingular(val, oldVal) : null;
-          }
-          //当前未禁用的数据
-          let arr = this.currentDisabledData;
-          let collectType = this.ruleForm.collectType;
-          if (
-            newVal === 4 ||
-            newVal === 11 ||
-            newVal === 13 ||
-            newVal === 12 ||
-            oldValue === 4 ||
-            oldValue === 11 ||
-            oldValue === 13 ||
-            oldValue === 12
-          ) {
-            if (newVal === 12) {
-              this.exportHeaderData.forEach((item) => {
-                if (item.key === 13 || item.key === 11 || item.key === 4) {
-                  item.disabled = true;
-                }
-              });
-            } else if (newVal === 4 || newVal === 11 || newVal === 13) {
-              this.exportHeaderData.forEach((item) => {
-                if (item.key === 12) {
-                  item.disabled = true;
-                }
-              });
-            } else {
-              if (!val.includes(12)) {
-                // if (oldValue === 12) {
-                this.exportHeaderData.forEach((item) => {
-                  //判断是否选择汇总类型
-                  if (collectType && collectType.length !== 0) {
-                    if (arr.includes(13)) {
-                      if (item.key === 13) {
-                        item.disabled = false;
-                      }
-                    }
-                    if (arr.includes(11)) {
-                      if (item.key === 11) {
-                        item.disabled = false;
-                      }
-                    }
-                    if (arr.includes(4)) {
-                      if (item.key === 4) {
-                        item.disabled = false;
-                      }
-                    }
-                  } else {
-                    if (item.key === 4 || item.key === 11 || item.key === 13) {
-                      item.disabled = false;
-                    }
-                  }
-                });
-              }
-              if (oldValue === 4 || oldValue === 11 || oldValue === 13) {
-                if (
-                  !val.includes(4) &&
-                  !val.includes(11) &&
-                  !val.includes(13)
-                ) {
-                  this.exportHeaderData.forEach((item) => {
-                    if (collectType && collectType.length !== 0) {
-                      if (arr.includes(12)) {
-                        if (item.key === 12) {
-                          item.disabled = false;
-                        }
-                      }
-                    } else {
-                      if (item.key === 12) {
-                        item.disabled = false;
-                      }
-                    }
-                  });
-                }
-              }
-            }
-          }
-        });
-      },
-      deep: true,
-      immediate: true,
-    },
-  },
+  watch: {},
 };
 </script>
 <style lang="scss" scoped>
 .summarizExport {
   padding: 0 24px;
-  height: calc(100vh - 64px);
+  // height: calc(100vh - 64px);
   background: #fff;
   border-top: 1px solid #fff;
+  .form_item {
+    margin-top: 32px;
+    margin-bottom: 26px;
+    .line {
+      width: 4px;
+      height: 16px;
+      background: #1890ff;
+      display: inline-block;
+    }
+    .title {
+      width: 80px;
+      height: 22px;
+      font-family: PingFangSC-Medium;
+      font-weight: Medium;
+      font-size: 16px;
+      color: #2b2f36;
+      padding-left: 8px;
+    }
+  }
+  .tableTit {
+    width: 100%;
+    height: 70px;
+    text-align: center;
+    line-height: 70px;
+    border: 1px solid #ebeef5;
+    border-bottom: none;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    font-size: 14px;
+    color: #2b2f36;
+  }
   .demo_ruleForm {
     .is-required {
       ::v-deep .el-form-item__label::before {
@@ -662,30 +683,22 @@ export default {
       width: 100%;
     }
 
-    .form_item {
-      margin-top: 32px;
-      margin-bottom: 26px;
-      .line {
-        width: 4px;
-        height: 16px;
-        background: #1890ff;
-        display: inline-block;
-      }
-      .title {
-        width: 80px;
-        height: 22px;
-        font-family: PingFangSC-Medium;
-        font-weight: Medium;
-        font-size: 16px;
-        color: #2b2f36;
-        padding-left: 8px;
-      }
-    }
     .responsive {
       width: 32%;
       display: inline-block;
       margin-right: 16px;
+      .section {
+        border: 1px solid #dcdfe6;
+        border-radius: 4px;
+        .el-input {
+          width: 45%;
+          ::v-deep .el-input__inner {
+            border: none !important;
+          }
+        }
+      }
     }
+
     @media screen and (max-width: 1200px) {
       .responsive {
         width: 47%;
