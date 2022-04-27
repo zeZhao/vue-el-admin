@@ -48,22 +48,40 @@
       <el-table-column prop="fileSize" label="大小(M)" width="109">
       </el-table-column>
       <el-table-column prop="downloadContent" label="导出内容">
+        <template slot-scope="scope">
+          <el-tooltip
+            class="item"
+            effect="dark"
+            :content="scope.row.downloadContent"
+            placement="top"
+          >
+            <span>{{ scope.row.downloadContent }}</span>
+          </el-tooltip>
+        </template>
       </el-table-column>
       <el-table-column prop="address" fixed="right" label="状态" width="120">
         <template slot-scope="{ row }">
-          <el-link
-            :underline="false"
-            type="primary"
-            v-show="row.status === 3"
-            @click="downloadHandle(row)"
-            >下载</el-link
-          >
           <el-link :underline="false" type="primary" v-show="row.status === 2"
             >生成中...</el-link
           >
           <el-link :underline="false" type="primary" v-show="row.status === 1"
             >队列中</el-link
           >
+          <el-link :underline="false" type="primary" v-show="row.status === 3"
+            >已完成</el-link
+          >
+
+          <el-link :underline="false" type="danger" v-show="row.status === 4"
+            >生成失败</el-link
+          >
+          <el-link :underline="false" type="info" v-show="row.status === 5"
+            >已取消</el-link
+          >
+        </template>
+      </el-table-column>
+      <el-table-column label="操作">
+        <template slot-scope="{ row }">
+          <el-link type="primary">发送</el-link>
           <el-link
             :underline="false"
             type="danger"
@@ -71,12 +89,14 @@
             @click="cancelDownload(row)"
             >取消</el-link
           >
-          <el-link :underline="false" type="danger" v-show="row.status === 4"
-            >生成失败</el-link
+          <el-link
+            :underline="false"
+            type="primary"
+            v-show="row.status === 3"
+            @click="downloadHandle(row)"
+            >下载</el-link
           >
-          <el-link :underline="false" type="info" v-show="row.status === 5"
-            >已取消</el-link
-          >
+          <el-link type="primary">删除</el-link>
         </template>
       </el-table-column>
     </el-table>
