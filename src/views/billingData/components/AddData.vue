@@ -31,9 +31,9 @@
             maxlength="6"
           ></el-input>
         </el-form-item>
-        <el-form-item label="条数：" prop="succcountj">
+        <el-form-item label="条数：" prop="count">
           <el-input-number
-            v-model="form.succcountj"
+            v-model="form.count"
             :step="1"
             :min="0"
             size="small"
@@ -63,10 +63,10 @@
           ></el-input-number>
         </el-form-item>
         <el-form-item label="消耗金额(元)：">
-          <span>{{ form.succcountj * form.uprice }}</span>
+          <span>{{ form.count * form.uprice }}</span>
         </el-form-item>
         <el-form-item label="成本：">
-          <span>{{ form.succcountj * form.gprice }}</span>
+          <span>{{ form.count * form.gprice }}</span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -89,7 +89,7 @@ export default {
       form: {
         month: "",
         userId: "",
-        succcountj: "",
+        count: "",
         uprice: "",
         gateway: "",
         gprice: "",
@@ -100,9 +100,7 @@ export default {
           { required: true, message: "请输入账户编号", trigger: "blur" },
           { max: 6, message: "最多输入6个字符", trigger: ["blur", "change"] },
         ],
-        succcountj: [
-          { required: true, message: "请输入条数", trigger: "blur" },
-        ],
+        count: [{ required: true, message: "请输入条数", trigger: "blur" }],
         uprice: [
           { required: true, message: "请输入账户单价(分)", trigger: "blur" },
         ],
