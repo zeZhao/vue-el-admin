@@ -6,6 +6,7 @@
           <el-input
             v-model="searchForm.userId"
             clearable
+            maxlength="6"
             placeholder="请输入账户编号"
           ></el-input>
         </el-form-item>
@@ -59,7 +60,7 @@
           <router-link to="/taskManagement">
             <el-button type="primary">任务管理</el-button>
           </router-link>
-          <DataManagement></DataManagement>
+          <DataManagement @updataMonth="updataMonth"></DataManagement>
         </div>
       </div>
 
@@ -160,25 +161,12 @@ export default {
     await this.getMonthList();
     this.getQueryByPage();
     this.selectDateAmount();
-    // this.a();
   },
   computed: {},
   methods: {
-    a() {
-      let myApp = {};
-      myApp.namespace = function (name) {
-        let parts = name.split(".");
-        let current = myApp;
-        for (var i in parts) {
-          if (!current[parts[i]]) {
-            current[parts[i]] = {};
-          }
-          current = current[parts[i]];
-        }
-      };
-      myApp.namespace("event");
-      myApp.namespace("dom.style");
-      console.log(myApp, "-----");
+    //更新月份
+    updataMonth(){
+      this.getMonthList()
     },
     selectDateAmount() {
       selectDateAmount(this.searchForm).then((res) => {
@@ -187,7 +175,6 @@ export default {
           this.statistics.cost = cost;
           this.statistics.proceeds = proceeds;
           this.statistics.succcountj = succcountj;
-          console.log(res, "----------");
         }
       });
     },

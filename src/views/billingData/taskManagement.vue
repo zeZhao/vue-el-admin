@@ -110,7 +110,6 @@
                 type="text"
                 @click="revokeVisible = true"
                 :disabled="!row.status == 0 || !row.status == 5"
-                style="color: #f54945; padding-left: 24px"
                 >撤销</el-button
               >
             </el-popconfirm>

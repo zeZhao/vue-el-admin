@@ -16,12 +16,13 @@
             <el-form-item prop="username" label="账号">
               <el-input
                 ref="username"
-                v-model="loginForm.username"
+                v-model.trim="loginForm.username"
                 placeholder="请输入账号"
                 name="username"
                 type="text"
                 tabindex="1"
                 style="float: left"
+                maxlength="11"
               />
             </el-form-item>
 
@@ -147,8 +148,8 @@ export default {
           })
             .then((data) => {
               if (data.code === 200) {
-                const smsToken = "token" + randomNum();
-                setStorage("token", smsToken);
+                // const smsToken = "token" + randomNum();
+                setStorage("token", data.data);
                 // setStorage("info", data.data);
                 this.$router.push("./billingData");
                 this.$message.success("登录成功");

@@ -11,7 +11,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
   config => {
-    config.headers['token'] = store.state.token
+    config.headers['token'] = getStorage('token')
     return config
   },
   error => {

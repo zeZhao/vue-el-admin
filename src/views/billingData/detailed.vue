@@ -26,7 +26,7 @@
           </el-select>
         </el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
-        <el-button type="primary" @click="oneClickGo" style="float: right"
+        <el-button type="primary" @click="oneClickGo" style="float: right" :disabled="oneClickDis"
           >一键执行</el-button
         >
       </el-form>
@@ -145,6 +145,8 @@ export default {
       monthList: [],
       executeVisible: false,
       revokeVisible: false,
+      //一键执行禁用
+      oneClickDis:true
     };
   },
   created() {},
@@ -201,7 +203,9 @@ export default {
                 "yyyy-MM-dd hh:mm:ss"
               );
             }
+            
           });
+          this.oneClickDis = this.tableData.every(item.status == 3)
         }
       });
     },

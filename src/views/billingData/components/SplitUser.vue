@@ -136,8 +136,10 @@ export default {
         );
         this.tableData.push(newData);
         this.dialogVisible = true;
-      } else {
-        this.$message.error("请选择要拆分的账户数据");
+      } else if(this.rawData.length === 0) {
+        this.$message.error("请选择要拆分的通道数据");
+      } else if(this.rawData.length > 1) {
+        this.$message.error("一次只能拆分一条数据");
       }
     },
     addUser() {

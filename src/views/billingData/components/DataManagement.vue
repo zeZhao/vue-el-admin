@@ -83,6 +83,7 @@ export default {
         if (res.code === 200) {
           this.$message.success("操作成功");
           this.getQueryByPage();
+          this.$emit('updataMonth')
         }
         this.loading = false;
       });
