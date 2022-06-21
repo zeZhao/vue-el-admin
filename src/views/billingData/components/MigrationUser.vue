@@ -118,7 +118,12 @@ export default {
             this.form.uprice = res.data.uprice;
             this.form.succcountj = res.data.succcountj;
             this.form.proceeds = res.data.proceeds;
+          }else{
+            this.form.uprice = '';
+            this.form.succcountj = '';
+            this.form.proceeds = '';
           }
+          
         }
       );
     },
@@ -128,13 +133,18 @@ export default {
     submit() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          let form = Object.assign(this.form, { type: 4 });
-          addTask(form).then((res) => {
-            if (res.code === 200) {
-              this.$message.success("修改成功！");
-              this.dialogFormVisible = false;
-            }
-          });
+          if(this.form.succcountj){
+            let form = Object.assign(this.form, { type: 4 });
+            addTask(form).then((res) => {
+              if (res.code === 200) {
+                this.$message.success("修改成功！");
+                this.dialogFormVisible = false;
+              }
+            });
+          }else{
+            this.$message.error("请输入正确的原账户编号");
+          }
+          
         } else {
           console.log("error submit!!");
           return false;

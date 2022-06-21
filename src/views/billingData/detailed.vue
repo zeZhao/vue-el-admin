@@ -122,6 +122,7 @@
 
 <script>
 import {
+  selectTask,
   selectTaskDetail,
   getMonthUnLock,
   addTasksToWaiting,
@@ -153,6 +154,7 @@ export default {
   async mounted() {
     await this.getMonthList();
     this.getQueryByPage();
+    this.getSelectTask();
   },
   computed: {},
   methods: {
@@ -205,7 +207,15 @@ export default {
             }
             
           });
-          this.oneClickDis = this.tableData.every(item.status == 3)
+          // this.oneClickDis = this.tableData.every(item.status == 3)
+        }
+      });
+    },
+    getSelectTask() {
+      let form = Object.assign(this.searchForm);
+      selectTask(form).then((res) => {
+        if (res.code === 200) {
+          this.oneClickDis = res.data.list.every(item.status == 3)
         }
       });
     },

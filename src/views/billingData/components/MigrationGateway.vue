@@ -124,6 +124,11 @@ export default {
           this.form.cost = res.data.cost;
           this.form.succcountj = res.data.succcountj;
           this.form.gprice = res.data.gprice;
+        }else{
+          this.form.cost = '';
+          this.form.succcountj = '';
+          this.form.gprice = '';
+          
         }
       });
     },
@@ -133,13 +138,18 @@ export default {
     submit() {
       this.$refs["form"].validate((valid) => {
         if (valid) {
-          let form = Object.assign(this.form, { type: 3 });
-          addTask(form).then((res) => {
-            if (res.code === 200) {
-              this.$message.success("修改成功！");
-              this.dialogFormVisible = false;
-            }
-          });
+          if(this.form.cost){
+            let form = Object.assign(this.form, { type: 3 });
+            addTask(form).then((res) => {
+              if (res.code === 200) {
+                this.$message.success("修改成功！");
+                this.dialogFormVisible = false;
+              }
+            });
+          }else{
+            this.$message.error("请输入正确的原通道编号");
+          }
+          
         } else {
           console.log("error submit!!");
           return false;
