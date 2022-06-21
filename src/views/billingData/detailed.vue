@@ -215,8 +215,7 @@ export default {
       let form = Object.assign(this.searchForm);
       selectTask(form).then((res) => {
         if (res.code === 200) {
-          this.oneClickDis = res.data.list.every(item.status == 3)
-        }
+          this.oneClickDis = res.data.list.every(item => item.status == 0 || item.status == 1 || item.status == 2)       }
       });
     },
     onSubmit() {
@@ -242,7 +241,7 @@ export default {
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: "已取消操作",
           });
         });
     },
