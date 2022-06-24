@@ -153,7 +153,7 @@ export default {
   async mounted() {
     await this.getMonthList();
     this.getQueryByPage();
-    this.getSelectTask();
+    // this.getSelectTask();
   },
   computed: {},
   methods: {
@@ -206,17 +206,22 @@ export default {
             }
             
           });
-          // this.oneClickDis = this.tableData.every(item.status == 3)
+          this.tableData.forEach(item=>{
+            if(item.status == 0 ){
+              this.oneClickDis = false
+            }
+          })
+          // this.oneClickDis = this.tableData.every(item.status == 0)
         }
       });
     },
-    getSelectTask() {
-      let form = Object.assign(this.searchForm);
-      selectTask(form).then((res) => {
-        if (res.code === 200) {
-          this.oneClickDis = res.data.list.every(item => item.status == 0 || item.status == 1 || item.status == 2)       }
-      });
-    },
+    // getSelectTask() {
+    //   let form = Object.assign(this.searchForm);
+    //   selectTask(form).then((res) => {
+    //     if (res.code === 200) {
+    //       this.oneClickDis = res.data.list.every(item => item.status == 0 || item.status == 1 || item.status == 2)       }
+    //   });
+    // },
     onSubmit() {
       this.getQueryByPage();
     },

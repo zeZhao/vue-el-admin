@@ -91,7 +91,7 @@ export default {
       rules: {
         month: [{ required: true, message: "请选择月份", trigger: "blur" }],
         gateway: [
-          { required: true, message: "请输入原通道编号", trigger: "blur" },
+          { required: true, message: "请输入通道编号", trigger: "blur" },
           { max: 6, message: "最多输入6个字符", trigger: ["blur", "change"] },
         ],
         updateGprice: [

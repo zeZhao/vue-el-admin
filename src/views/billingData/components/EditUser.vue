@@ -90,7 +90,7 @@ export default {
       rules: {
         month: [{ required: true, message: "请选择月份", trigger: "blur" }],
         userId: [
-          { required: true, message: "请输入原账户编号", trigger: "blur" },
+          { required: true, message: "请输入账户编号", trigger: "blur" },
           { max: 6, message: "最多输入6个字符", trigger: ["blur", "change"] },
         ],
         updateUprice: [
