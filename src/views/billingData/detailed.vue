@@ -97,7 +97,6 @@
               <el-button
                 slot="reference"
                 type="text"
-                style="color: #f54945"
                 :disabled="row.status !== 0"
                 @click="revokeVisible = true"
                 >撤销</el-button
