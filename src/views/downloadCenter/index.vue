@@ -193,7 +193,7 @@ export default {
         mobile: [
           {
             required: true,
-            pattern: "",
+            pattern: /^(1[3-9][0-9]{9})$/,
             message: "请输正确的手机号格式",
             trigger: "blur",
           },
