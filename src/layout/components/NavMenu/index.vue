@@ -3,15 +3,15 @@
     <div class="nav_conent">
       <div class="nav_conent_title">短信V3数据导出工具</div>
       <div class="nav_conent_handle clearfix">
-        <div class="handle_name">
+        <!-- <div class="handle_name">
           <div class="name_img">
             <img src="@/assets/images/name_icon@2x.png" alt="" />
           </div>
 
           <span class="name_txt">管理员：{{ name }}</span>
-        </div>
+        </div> -->
         <!-- <span>账号名：{{ account }}</span> -->
-        <el-dropdown @command="handleCommand" trigger="click">
+        <!-- <el-dropdown @command="handleCommand" trigger="click">
           <span class="el-dropdown-link">
             <div class="link_img">
               <img src="@/assets/images/account_icon@2x.png" alt="" />
@@ -24,11 +24,10 @@
           <el-dropdown-menu slot="dropdown" class="dropdown_item">
             <el-dropdown-item>退出登录</el-dropdown-item>
           </el-dropdown-menu>
-        </el-dropdown>
-        <!-- <span @click="logout">退出登录</span> -->
+        </el-dropdown> -->
+        <span @click="handleCommand">退出登录</span>
       </div>
     </div>
-    <!-- 确认导出 -->
     <el-dialog
       title="温馨提示"
       :visible.sync="confirmVisible"
@@ -73,9 +72,13 @@ export default {
   },
   created() {},
   mounted() {
-    const { name, account } = JSON.parse(getStorage("info"));
-    this.name = name;
-    this.account = account;
+    if(JSON.parse(getStorage("info")) !== null){
+      const { name, account } = JSON.parse(getStorage("info"));
+      
+      this.name = name;
+      this.account = account;
+    }
+    
   },
   computed: {},
   methods: {

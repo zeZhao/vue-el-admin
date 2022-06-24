@@ -4,7 +4,7 @@
       <el-form :model="searchForm" :inline="true">
         <el-form-item label="">
           <el-input
-            v-model="searchForm.createUser"
+            v-model="searchForm.operator"
             placeholder="请输入发送账号"
           ></el-input>
         </el-form-item>
@@ -21,7 +21,7 @@
         </el-form-item>
         <el-form-item label="">
           <el-input
-            v-model="searchForm.downloadContent"
+            v-model="searchForm.email"
             placeholder="请输入邮箱"
           ></el-input>
         </el-form-item>
@@ -45,17 +45,17 @@
       }"
       highlight-current-row
     >
-      <el-table-column prop="createUser" label="发送账号" width="104">
+      <el-table-column prop="operator" label="发送账号" width="104">
       </el-table-column>
-      <el-table-column prop="submitTime" label="发送时间" width="180">
+      <el-table-column prop="sendTime" label="发送时间" width="180">
       </el-table-column>
-      <el-table-column prop="downloadNum" label="发送邮箱" width="138">
+      <el-table-column prop="email" label="发送邮箱" width="138">
       </el-table-column>
-      <el-table-column prop="downloadNum" label="发送手机号" width="138">
+      <el-table-column prop="mobile" label="发送手机号" width="138">
       </el-table-column>
-      <el-table-column prop="downloadContent" label="发送内容" tooltip-effect>
+      <el-table-column prop="content" label="发送内容" tooltip-effect>
       </el-table-column>
-      <el-table-column prop="time" label="导出时间" tooltip-effect>
+      <el-table-column prop="exportTime" label="导出时间" tooltip-effect>
       </el-table-column>
       <el-table-column prop="address" fixed="right" label="状态" width="120">
         <template slot-scope="{ row }">
@@ -82,16 +82,16 @@
 </template>
 
 <script>
-import { queryByPage, download, cancelDownload } from "@/api/sysDownLoadLog";
+import { queryByPage } from "@/api/sendReturnReport";
 
 export default {
   components: {},
   data() {
     return {
       searchForm: {
-        createUser: "",
-        downloadContent: "",
+        operator: "",
         mobile: "",
+        email: "",
         time: [],
         pageNumber: 1,
         pageSize: 10,
@@ -107,30 +107,6 @@ export default {
   },
   computed: {},
   methods: {
-    downloadHandle(row) {
-      const { id, createUser, submitTime } = row;
-      let time = new Date(submitTime).Format("yyyyMMddhhmmss");
-      download({ downloadLogId: id }).then((res) => {
-        let blob = new Blob([res]);
-        let url = window.URL.createObjectURL(blob);
-        let aLink = document.createElement("a");
-        aLink.style.display = "none";
-        aLink.href = url;
-        aLink.setAttribute("download", `${createUser}数据详单${time}.zip`);
-        document.body.appendChild(aLink);
-        aLink.click();
-        document.body.removeChild(aLink);
-        window.URL.revokeObjectURL(url);
-      });
-    },
-    cancelDownload(row) {
-      const { id } = row;
-      cancelDownload({ id }).then((res) => {
-        if (res.coed === 200) {
-          this.$message.success("已取消生成~");
-        }
-      });
-    },
     sizeChange(val) {
       this.searchForm.pageSize = val;
       this.searchForm.pageNumber = 1;
@@ -143,8 +119,8 @@ export default {
     getQueryByPage() {
       const { time } = this.searchForm;
       let form = Object.assign(this.searchForm, {
-        submitStartDate: time ? time[0] : "",
-        submitEndDate: time ? time[1] : "",
+        startTime: time ? time[0] : "",
+        endTime: time ? time[1] : "",
       });
       queryByPage(form).then((res) => {
         if (res.code === 200) {

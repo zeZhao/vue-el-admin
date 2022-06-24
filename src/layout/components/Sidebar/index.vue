@@ -40,7 +40,7 @@ export default {
       return path;
     },
     routeList() {
-      return constantRoutes.filter((v) => !v.hidden);
+      return constantRoutes[1].children.filter((v) => !v.hidden);
     },
   },
   mounted() {},

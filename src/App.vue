@@ -1,25 +1,11 @@
 <template>
   <div id="app">
-    <div class="layout">
-      <NavMenu></NavMenu>
-      <div class="content">
-        <div class="content_side">
-          <Sidebar></Sidebar>
-        </div>
-        <div class="content_cnt">
-          <router-view />
-        </div>
-      </div>
-    </div>
+    <router-view />
   </div>
 </template>
 
 <script>
-import Layout from "@/layout/index.vue";
-import NavMenu from "@/layout/components/NavMenu/index.vue";
-import Sidebar from "@/layout/components/Sidebar/index.vue";
 export default {
-  components: { Layout, NavMenu, Sidebar },
 };
 </script>
 

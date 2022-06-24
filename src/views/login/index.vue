@@ -45,7 +45,7 @@
                 style="float: left"
               />
             </el-form-item>
-            <el-form-item prop="verifyCode" label="口令">
+            <!-- <el-form-item prop="verifyCode" label="口令">
               <el-input
                 v-model="loginForm.verifyCode"
                 placeholder="请输入口令"
@@ -56,7 +56,7 @@
               <div class="captcha_code">
                 <img :src="captcha" ref="code" @click="getCaptcha" />
               </div>
-            </el-form-item>
+            </el-form-item> -->
             <el-button
               :loading="loading"
               type="primary"

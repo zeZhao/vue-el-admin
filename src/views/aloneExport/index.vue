@@ -34,9 +34,9 @@
         </el-form-item>
       </div>
       <div class="responsive" v-show="ruleForm.queryType == 1">
-        <el-form-item label="多用户" prop="queryId">
+        <el-form-item label="多用户" prop="userId">
           <el-input
-            v-model="ruleForm.queryId"
+            v-model="ruleForm.userId"
             maxlength="50"
             show-word-limit
             placeholder="请输入多个用户ID，用英文逗号隔开"
@@ -53,25 +53,25 @@
             range-separator="至"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            value-format="yyyy/MM/dd"
+            value-format="yyyy-MM-dd"
             :picker-options="pickerOptions"
           >
           </el-date-picker>
         </el-form-item>
       </div>
 
-      <div class="responsive">
+      <!-- <div class="responsive">
         <el-form-item label="补发" prop="resend">
           <el-select v-model="ruleForm.resend" placeholder="请选择导出补发">
             <el-option label="有" value="2"></el-option>
             <el-option label="无" value="1"></el-option>
           </el-select>
         </el-form-item>
-      </div>
+      </div> -->
       <div class="responsive">
-        <el-form-item label="手机号脱敏" prop="collectType">
+        <el-form-item label="手机号脱敏" prop="mobileDesensitization">
           <el-select
-            v-model="ruleForm.collectType"
+            v-model="ruleForm.mobileDesensitization"
             placeholder="请选择手机号脱敏"
             style="height: 32px"
           >
@@ -136,10 +136,10 @@
       </div>
       <div>
         <el-form :model="formInline" :rules="rulesInline" ref="formInline">
-          <el-form-item label="短信验证码" prop="authorizationCode">
+          <el-form-item label="动态口令" prop="authorizationCode">
             <el-input
               v-model="formInline.authorizationCode"
-              placeholder="请输入短信验证码"
+              placeholder="请输入动态口令"
             ></el-input> </el-form-item
         ></el-form>
       </div>
@@ -178,6 +178,11 @@
         <span class="title">确认导出所选内容吗？</span>
         <p class="content">导出后可在下载中心中进行查看</p>
       </div>
+      <el-form :model="fileForm" :rules="fileRule" inline>
+        <el-form-item label="标题：" prop="fileName"  style="width:100%">
+          <el-input v-model="fileForm.fileName" placeholder="请输入文档名称"/>
+        </el-form-item>
+      </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="confirmVisible = false">取消</el-button>
         <el-button
@@ -224,7 +229,8 @@
 
 <script>
 import {
-  checkParamOrGetAuthorizationCode,
+  submitDownloadCenter,
+  checkPassphrase,
   confirmExport,
   exportData,
 } from "@/api/export";
@@ -238,15 +244,23 @@ export default {
       callback();
     };
     return {
+      fileForm:{
+        fileName:""
+      },
+      fileRule:{
+        fileName:[
+          { required: true, message: "请输入标题", trigger: "blur" },
+        ]
+      },
       tableData: [{ item: "" }],
       //表单数据
       ruleForm: {
-        collectType: [],
+        mobileDesensitization: '2',
         time: [],
         exportHeader: [],
         queryType: "2",
         queryId: "",
-        resend: "1",
+        userId: "",
       },
       label: "用户ID",
 
@@ -301,8 +315,8 @@ export default {
         { key: 5, value: "运营商", disabled: false },
         // { key: 6, value: "签名", disabled: false },
         { key: 7, value: "短信内容", disabled: false },
-        { key: 9, value: "内容长度", disabled: false },
         { key: 8, value: "手机号码", disabled: false },
+        { key: 9, value: "内容长度", disabled: false },
         { key: 10, value: "状态码", disabled: false },
         { key: 11, value: "省份", disabled: false },
         { key: 12, value: "提交条数", disabled: false },
@@ -321,7 +335,7 @@ export default {
       },
       rulesInline: {
         authorizationCode: [
-          { required: true, message: "请输入短信验证码", trigger: "blur" },
+          { required: true, message: "请输入动态口令", trigger: "blur" },
         ],
       },
 
@@ -398,16 +412,20 @@ export default {
     },
     submitExport() {
       const { time } = this.ruleForm;
-      let form = Object.assign(this.ruleForm, {
+      let form = Object.assign({}, {
         startTime: time ? time[0] : "",
         endTime: time ? time[1] : "",
+        singeExportParamDto:this.ruleForm,
+        title:this.fileForm.fileName,
+        //导出类型：1单条导出,2当当导出
+        exportType:1
       });
-      exportData(form).then((res) => {
+      submitDownloadCenter(form).then((res) => {
         if (res.code === 200) {
           this.$message.success("导出成功，请前往下载中心查看~");
           this.confirmVisible = false;
         } else {
-          this.$message.error(res.data);
+          this.$message.error(res.msg);
         }
       });
     },
@@ -418,7 +436,7 @@ export default {
     submitJurisdiction(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          confirmExport(this.formInline).then((res) => {
+          checkPassphrase(`?authorizationCode=${this.formInline.authorizationCode}`).then((res) => {
             if (res.code === 200) {
               this.jurisdictionVisible = false;
               this.$message({
@@ -443,23 +461,14 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          const { time } = this.ruleForm;
-          let form = Object.assign(this.ruleForm, {
-            startTime: time ? time[0] : "",
-            endTime: time ? time[1] : "",
-          });
-          checkParamOrGetAuthorizationCode(form).then((res) => {
+          // const { time } = this.ruleForm;
+          // let form = Object.assign(this.ruleForm, {
+          //   startTime: time ? time[0] : "",
+          //   endTime: time ? time[1] : "",
+          //   exportType:1
+          // });
+          checkPassphrase().then((res) => {
             if (res.code === 200) {
-              this.$message({
-                showClose: true,
-                message: "成功发送授权码~",
-                type: "success",
-                duration: 1500,
-              });
-              setTimeout(() => {
-                this.jurisdictionVisible = true;
-              }, 1500);
-            } else if (res.code === 402) {
               this.$message({
                 showClose: true,
                 message: "已获取授权码，可直接二次确认导出",
@@ -469,10 +478,21 @@ export default {
               setTimeout(() => {
                 this.confirmVisible = true;
               }, 1500);
-            } else if (res.code === 403) {
+              
+            } else if (res.code === 402) {
               this.$message({
                 showClose: true,
-                message: "授权码未校验,请重新输入授权码",
+                message: "成功发送授权码~",
+                type: "success",
+                duration: 1500,
+              });
+              setTimeout(() => {
+                this.jurisdictionVisible = true;
+              }, 1500);
+            } else if (res.code === 1099) {
+              this.$message({
+                showClose: true,
+                message: "口令未校验",
                 type: "error",
                 duration: 1500,
               });
@@ -666,8 +686,8 @@ export default {
     }
   }
   ::v-deep .confirm_visible {
-    height: 156px;
-    display: flex;
+    // height: 156px;
+    // display: flex;
     .header_title {
       .title {
         font-family: PingFangSC-Medium;
@@ -690,7 +710,10 @@ export default {
       padding: 24px 24px 10px;
     }
     .el-dialog__body {
-      padding: 0;
+      padding: 10px 24px 0;
+      .el-form-item__content{
+        width: 80%;
+      }
     }
     .el-dialog__footer {
       padding: 10px 24px 24px;
