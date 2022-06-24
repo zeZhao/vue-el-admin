@@ -175,6 +175,10 @@ export default {
           this.statistics.cost = cost;
           this.statistics.proceeds = proceeds;
           this.statistics.succcountj = succcountj;
+        }else{
+          this.statistics.cost = 0;
+          this.statistics.proceeds = 0;
+          this.statistics.succcountj = 0;
         }
       });
     },

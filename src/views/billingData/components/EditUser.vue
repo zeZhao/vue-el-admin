@@ -51,7 +51,7 @@
         </el-form-item>
         <el-form-item label="修改后金额(元)：">
           <!-- <el-input v-model="form.proceeds"></el-input> -->
-          <span>{{ form.succcountj * form.updateUprice }}</span>
+          <span>{{ (form.succcountj * form.updateUprice) / 100 ? (form.succcountj * form.updateUprice) / 100 : 0 }}</span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

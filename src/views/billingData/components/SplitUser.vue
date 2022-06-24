@@ -63,7 +63,7 @@
         </el-table-column>
         <el-table-column prop="proceeds" label="消耗金额(元)">
           <template slot-scope="{ row }">
-            <span>{{ row.count * row.uprice }}</span>
+            <span>{{ (row.count * row.uprice) / 100 ? (row.count * row.uprice) / 100  : 0}}</span>
           </template>
         </el-table-column>
         <el-table-column label="" width="100">
@@ -136,18 +136,18 @@ export default {
         );
         this.tableData.push(newData);
         this.dialogVisible = true;
-      } else if(this.rawData.length === 0) {
-        this.$message.error("请选择要拆分的通道数据");
-      } else if(this.rawData.length > 1) {
+      }else if(this.rawData.length > 1) {
         this.$message.error("一次只能拆分一条数据");
-      }
+      } else{
+        this.$message.error("请选择要拆分的账户数据");
+      } 
     },
     addUser() {
       let newData = {
         dataState: "拆分数据",
         userId: "",
-        count: "",
-        uprice: "",
+        count: 0,
+        uprice: 0,
         proceeds: 0,
         raw: false, //表格初始数据标识
         init: false,

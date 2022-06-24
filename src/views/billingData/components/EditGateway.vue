@@ -52,7 +52,7 @@
         <el-form-item label="修改后成本(元)：">
           <!-- <el-input v-model="form.updateGateway"></el-input> -->
           <!-- <el-input v-model="form.proceeds"></el-input> -->
-          <span>{{ form.succcountj * form.updateGprice }}</span>
+          <span>{{ (form.succcountj * form.updateGprice) / 100 ? (form.succcountj * form.updateGprice) / 100 : 0}}</span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

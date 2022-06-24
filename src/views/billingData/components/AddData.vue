@@ -63,10 +63,10 @@
           ></el-input-number>
         </el-form-item>
         <el-form-item label="消耗金额(元)：">
-          <span>{{ form.count * form.uprice }}</span>
+          <span>{{ (form.count * form.uprice) / 100 ? (form.count * form.uprice) / 100 : 0 }}</span>
         </el-form-item>
         <el-form-item label="成本：">
-          <span>{{ form.count * form.gprice }}</span>
+          <span>{{ (form.count * form.gprice) / 100 ? (form.count * form.gprice) / 100 : 0}}</span>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

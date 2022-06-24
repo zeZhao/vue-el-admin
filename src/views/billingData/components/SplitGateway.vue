@@ -30,6 +30,8 @@
           <template slot-scope="{ row, $index }">
             <el-input-number
               v-if="!row.raw"
+              type="number"
+              step-strictly
               v-model="tableData[$index].count"
               :step="1"
               :min="0"
@@ -52,6 +54,8 @@
             ></el-input> -->
             <el-input-number
               v-if="!row.raw"
+              type="number"
+              step-strictly
               v-model="tableData[$index].gprice"
               :step="0.1"
               :precision="2"
@@ -63,7 +67,7 @@
         </el-table-column>
         <el-table-column prop="proceeds" label="消耗金额(元)">
           <template slot-scope="{ row }">
-            <span>{{ row.count * row.gprice }}</span>
+            <span>{{ (row.count * row.gprice) / 100 ? (row.count * row.gprice) / 100 : 0 }}</span>
           </template>
         </el-table-column>
         <el-table-column label="" width="100">
@@ -137,11 +141,11 @@ export default {
         );
         this.tableData.push(newData);
         this.dialogVisible = true;
-      } else if(this.rawData.length === 0) {
-        this.$message.error("请选择要拆分的通道数据");
-      } else if(this.rawData.length > 1) {
+      }else if(this.rawData.length > 1) {
         this.$message.error("一次只能拆分一条数据");
-      }
+      } else{
+        this.$message.error("请选择要拆分的通道数据");
+      } 
     },
     addUser() {
       let newData = {
