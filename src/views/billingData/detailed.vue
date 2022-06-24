@@ -206,12 +206,7 @@ export default {
             }
             
           });
-          this.tableData.forEach(item=>{
-            if(item.status == 0 ){
-              this.oneClickDis = false
-            }
-          })
-          // this.oneClickDis = this.tableData.every(item.status == 0)
+          this.oneClickDis = !this.tableData.some(item => item.status == 0)
         }
       });
     },
@@ -239,6 +234,7 @@ export default {
                 type: "success",
                 message: "操作成功!",
               });
+              this.getQueryByPage()
             }
           });
         })
