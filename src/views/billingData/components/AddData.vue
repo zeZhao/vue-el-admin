@@ -80,11 +80,18 @@
 <script>
 import { getMonthUnLock, addTask } from "@/api/billingData";
 export default {
+  props: {
+    monthList: {
+      type: Array,
+      required: true,
+      default: function () {
+        return [];
+      },
+    },
+  },
   components: {},
   data() {
     return {
-      //月份数据
-      monthList: [],
       dialogFormVisible: false,
       form: {
         month: "",
@@ -117,19 +124,11 @@ export default {
   },
   created() {},
   mounted() {
-    this.getMonthList();
   },
   computed: {},
   methods: {
     MigrationUser() {
       this.dialogFormVisible = true;
-    },
-    async getMonthList() {
-      await getMonthUnLock().then((res) => {
-        if (res.code === 200) {
-          this.monthList = res.data;
-        }
-      });
     },
     submit() {
       this.$refs["form"].validate((valid) => {
