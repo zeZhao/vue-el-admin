@@ -32,7 +32,7 @@ service.interceptors.response.use(
         message: '登录过期，请重新登录！',
         type: 'error',
       })
-      setTimeout(() => window.location.href = '/', 2000);
+      setTimeout(() => location.reload(), 2000);
     }
     return res
   },
