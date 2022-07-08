@@ -63,7 +63,7 @@
       </div>
       <div
         class="responsive"
-        v-if="ruleForm.exportType == 1 || ruleForm.exportType == 2 || ruleForm.exportType == 4"
+        v-if="ruleForm.exportType == 2"
       >
         <el-form-item label="成功率调整" prop="adjustSuccessRate">
           <el-select
@@ -128,8 +128,8 @@
             borderBottom: '1px solid #EFF0F1',
           }"
         >
-          <el-table-column prop="a" label="通道" align="center"
-            >X</el-table-column
+          <el-table-column prop="a" label="用户ID" align="center"
+            >XXXXXX</el-table-column
           >
           <el-table-column prop="a" label="code" align="center"
             >X</el-table-column
@@ -156,6 +156,11 @@
             borderBottom: '1px solid #EFF0F1',
           }"
         >
+          <el-table-column
+            prop="a"
+            label="用户ID"
+            align="center"
+          >XXXXXX</el-table-column>
           <el-table-column
             prop="a"
             label="内容"
@@ -224,12 +229,12 @@
             prop="a"
             label="用户ID"
             align="center"
-          ></el-table-column>
+          >XXXXXX</el-table-column>
           <el-table-column
             prop="a"
             label="短信内容类别"
             align="center"
-          ></el-table-column>
+          >XX</el-table-column>
           <el-table-column prop="a" label="短信内容" align="center"
             >XX</el-table-column
           >
@@ -262,7 +267,7 @@
             prop="a"
             label="用户ID"
             align="center"
-          ></el-table-column>
+          >XXXXXX</el-table-column>
           <el-table-column
             prop="a"
             label="短信内容"
@@ -533,7 +538,9 @@ export default {
   data() {
     const queryId = (rule, value, callback) => {
       if (!value) callback(new Error(`请输入区间值:最低值`));
+      if (value<0) callback(new Error(`区间值:最低值不能低于0`));
       if (!this.ruleForm.highest) callback(new Error(`请输入区间值:最高值	`));
+      if (this.ruleForm.highest>100) callback(new Error(`区间值:最高值不能高于100`));
       if (isNaN(value)) callback(new Error(`只能输入数字`));
       callback();
     };

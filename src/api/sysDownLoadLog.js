@@ -31,6 +31,15 @@ export function sendMailAndSms(data) {
     data
   })
 }
+//上传文件
+export function uploadFile(data) {
+  return request({
+    url: '/export/uploadFile',
+    method: 'post',
+    data,
+    responseType:'blob'
+  })
+}
 //发送
 export function deleteDownload(data) {
   return request({
