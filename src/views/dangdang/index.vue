@@ -779,6 +779,8 @@ export default {
             this.$message.success('操作成功')
             this.eplainForm.id = ''
             this.addExplain = false;
+          }else{
+            this.$message.error(res.msg)
           }
         })
       }else{
@@ -787,6 +789,8 @@ export default {
             this.getExplainQueryByPage()
             this.$message.success('操作成功')
             this.addExplain = false;
+          }else{
+            this.$message.error(res.msg)
           }
         })
       }

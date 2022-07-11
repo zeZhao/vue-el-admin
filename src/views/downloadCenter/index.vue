@@ -137,7 +137,7 @@
     >
     </el-pagination>
 
-    <el-dialog title="邮箱发送" :visible.sync="dialogFormVisible">
+    <el-dialog title="邮箱发送" :visible.sync="dialogFormVisible" :close-on-click-modal='false'>
       <el-form :model="form" label-width="100px" :rules="rules" ref="form">
         <el-form-item label="收件人：" prop="recipient">
           <el-input
@@ -145,9 +145,9 @@
             placeholder="请输入客户邮箱"
           ></el-input>
         </el-form-item>
-        <el-form-item label="抄送人：" prop="make">
+        <el-form-item label="抄送人：" prop="ccPerson">
           <el-input
-            v-model="form.make"
+            v-model="form.ccPerson"
             placeholder="请输入抄送人邮箱"
           ></el-input>
         </el-form-item>
@@ -234,7 +234,7 @@ export default {
       dialogFormVisible: false,
       form: {
         recipient: "",
-        make: "",
+        ccPerson: "",
         mobile: "",
         subject: "",
         text: "",
@@ -250,7 +250,7 @@ export default {
             trigger: "blur",
           },
         ],
-        make: [
+        ccPerson: [
           {
             required: true,
             type: "email",

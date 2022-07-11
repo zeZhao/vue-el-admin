@@ -461,12 +461,6 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          // const { time } = this.ruleForm;
-          // let form = Object.assign(this.ruleForm, {
-          //   startTime: time ? time[0] : "",
-          //   endTime: time ? time[1] : "",
-          //   exportType:1
-          // });
           checkPassphrase().then((res) => {
             if (res.code === 200) {
               this.$message({
