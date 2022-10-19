@@ -1,9 +1,5 @@
 # sms-vue-adjustment-tool
 
-短信 V3 调整工具项目
-
-# h
-
 ## Project setup
 
 ```
