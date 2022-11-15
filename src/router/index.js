@@ -19,97 +19,41 @@ export const constantRoutes = [
     }
   },
   {
-    path: "/aloneExport",
+    path: "/book",
     component: Layout,
     children: [
       {
-        path: '/aloneExport',
-        name: 'aloneExport',
-        component: () => import(/* webpackChunkName: "about" */  '@/views/aloneExport/index.vue'),
+        path: '/book',
+        name: 'book',
+        component: () => import(/* webpackChunkName: "about" */ '../views/book/index.vue'),
         meta: {
-          title: '单条导出'
+          title: '书籍管理',
         }
       },
       // {
-      //   path: '/summarizExport',
-      //   name: 'summarizExport',
-      //   component: () => import(/* webpackChunkName: "about" */  '@/views/summarizExport/index.vue'),
+      //   path: '/bookDistribution',
+      //   name: 'bookDistribution',
+      //   component: () => import(/* webpackChunkName: "about" */ '../views/bookDistribution/index.vue'),
       //   meta: {
-      //     title: '汇总导出'
-      //   }
-      // },
-      // {
-      //   path: '/gmxData',
-      //   name: 'gmxData',
-      //   component: () => import(/* webpackChunkName: "about" */  '@/views/gmxData/index.vue'),
-      //   meta: {
-      //     title: '国美信数据'
-      //   }
-      // },
-      // {
-      //   path: '/jxtData',
-      //   name: 'jxtData',
-      //   component: () => import(/* webpackChunkName: "about" */  '@/views/jxtData/index.vue'),
-      //   meta: {
-      //     title: '交信投数据'
-      //   }
-      // },
-      // {
-      //   path: '/sxxhData',
-      //   name: 'sxxhData',
-      //   component: () => import(/* webpackChunkName: "about" */  '@/views/sxxhData/index.vue'),
-      //   meta: {
-      //     title: '圣熙新华数据'
-      //   }
-      // },
-      // {
-      //   path: '/yhthcData',
-      //   name: 'yhthcData',
-      //   component: () => import(/* webpackChunkName: "about" */  '@/views/yhthcData/index.vue'),
-      //   meta: {
-      //     title: '粤海天河城'
-      //   }
-      // },
-      // {
-      //   path: '/bajData',
-      //   name: 'bajData',
-      //   component: () => import(/* webpackChunkName: "about" */  '@/views/bajData/index.vue'),
-      //   meta: {
-      //     title: '百安居'
+      //     title: '图书分布'
       //   }
       // },
       {
-        path: '/dangdang',
-        name: 'dangdang',
-        component: () => import(/* webpackChunkName: "about" */  '@/views/dangdang/index.vue'),
+        path: '/teacher',
+        name: 'teacher',
+        component: () => import(/* webpackChunkName: "about" */ '../views/teacher/index.vue'),
         meta: {
-          title: '当当数据'
+          title: '老师管理'
         }
       },
       {
-        path: '/downloadCenter',
-        name: 'downloadCenter',
-        component: () => import(/* webpackChunkName: "about" */ '../views/downloadCenter/index.vue'),
+        path: '/member',
+        name: 'member',
+        component: () => import(/* webpackChunkName: "about" */ '../views/member/index.vue'),
         meta: {
-          title: '下载中心'
+          title: '会员管理'
         }
       },
-      {
-        path: '/sendReturnReport',
-        name: 'sendReturnReport',
-        component: () => import(/* webpackChunkName: "about" */ '../views/sendReturnReport/index.vue'),
-        meta: {
-          title: '发送记录'
-        }
-      },
-      // {
-      //   path: '/utilityClass',
-      //   name: 'utilityClass',
-      //   component: () => import(/* webpackChunkName: "about" */ '../views/utilityClass/index.vue'),
-      //   meta: {
-      //     title: '工具类'
-      //   }
-      // },
     ]
   },
   
@@ -128,7 +72,6 @@ router.beforeEach((to, from, next) => {
   if (to.name == 'login') {
     next();
   } else {
-    console.log()
     let token = getStorage('token');
     if (token) {
       next();

@@ -2,13 +2,25 @@
   <div class="downloadCenter">
     <div class="search">
       <el-form :model="searchForm" :inline="true">
-        <el-form-item label="">
+        <el-form-item label="图书名称：">
           <el-input
             v-model="searchForm.exportAccount"
-            placeholder="请输入账号"
+            placeholder="请输入图书名称"
           ></el-input>
         </el-form-item>
-        <el-form-item label="">
+        <el-form-item label="幼儿园：">
+          <el-input
+            v-model="searchForm.exportAccount"
+            placeholder="请输入幼儿园："
+          ></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="所属幼儿园：">
+          <el-input
+            v-model="searchForm.exportAccount"
+            placeholder="请输入幼儿园："
+          ></el-input>
+        </el-form-item> -->
+        <!-- <el-form-item label="日期：">
           <el-date-picker
             v-model="searchForm.time"
             type="datetimerange"
@@ -18,16 +30,16 @@
             value-format="yyyy-MM-dd HH:mm:ss"
           >
           </el-date-picker>
-        </el-form-item>
-        <el-form-item label="">
+        </el-form-item> -->
+        <!-- <el-form-item label="">
           <el-input
             v-model="searchForm.downloadContent"
             placeholder="请输入内容"
           ></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           <el-button type="primary" @click="onSubmit">查询</el-button>
-          <el-button type="primary" @click="batchSend">批量发送</el-button>
+          <el-button type="primary" @click="batchSend">新增</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -39,16 +51,17 @@
         borderBottom: '1px solid #fff',
       }"
       highlight-current-row
-      @selection-change="handleSelectionChange"
     >
-      <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="exportAccount" label="导出账号" width="104">
+      <!-- <el-table-column type="selection" width="55"> </el-table-column> -->
+      <el-table-column prop="exportAccount" label="图书名称">
       </el-table-column>
-      <el-table-column prop="createTime" label="导出时间" width="180">
+      <el-table-column prop="createTime" label="幼儿园">
       </el-table-column>
-      <el-table-column prop="downloadNum" label="导出条数(万)" width="138">
-      </el-table-column>
-      <el-table-column prop="fileSize" label="大小(M)" width="109">
+      <!-- <el-table-column prop="downloadNum" label="日期" >
+      </el-table-column> -->
+      <!-- <el-table-column prop="downloadNum" label="所属幼儿园" >
+      </el-table-column> -->
+      <!-- <el-table-column prop="fileSize" label="大小(M)" width="109">
       </el-table-column>
       <el-table-column prop="title" label="标题"> </el-table-column>
       <el-table-column prop="downloadContent" label="导出内容" width="400">
@@ -93,7 +106,7 @@
             >已取消</el-link
           >
         </template>
-      </el-table-column>
+      </el-table-column> -->
       <el-table-column label="操作" width="100">
         <template slot-scope="{ row }">
           <span class="handle" @click="send(row)" v-show="row.buildState === 3"
@@ -137,21 +150,38 @@
     >
     </el-pagination>
 
-    <el-dialog title="邮箱发送" :visible.sync="dialogFormVisible" :close-on-click-modal='false'>
-      <el-form :model="form" label-width="100px" :rules="rules" ref="form">
-        <el-form-item label="收件人：" prop="recipient">
+    <el-dialog title="新增" :visible.sync="dialogFormVisible" :close-on-click-modal='false'>
+      <el-form :model="form" label-width="100px" ref="form">
+        <el-form-item label="图书名称：" prop="recipient">
           <el-input
             v-model="form.recipient"
-            placeholder="请输入客户邮箱"
+            placeholder="请输入图书名称"
           ></el-input>
         </el-form-item>
-        <el-form-item label="抄送人：" prop="ccPerson">
+        <el-form-item label="幼儿园：" prop="recipient">
           <el-input
+            v-model="form.recipient"
+            placeholder="请输入幼儿园"
+          ></el-input>
+        </el-form-item>
+        <!-- <el-form-item label="所属幼儿园：" prop="recipient">
+          <el-input
+            v-model="form.recipient"
+            placeholder="请输入所属幼儿园"
+          ></el-input>
+        </el-form-item> -->
+        <!-- <el-form-item label="日期：" prop="ccPerson"> -->
+          <!-- <el-input
             v-model="form.ccPerson"
             placeholder="请输入抄送人邮箱"
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="手机号：" prop="mobile">
+          ></el-input> -->
+          <!-- <el-date-picker
+            v-model="form.ccPerson"
+            type="date"
+            placeholder="选择日期">
+          </el-date-picker> -->
+        <!-- </el-form-item> -->
+        <!-- <el-form-item label="手机号：" prop="mobile">
           <el-input
             v-model="form.mobile"
             placeholder="请输入客户手机号码"
@@ -171,8 +201,8 @@
             placeholder="您好：
    附件为北京聚通达科技股份有限公司销售对账单。请贵公司于收到邮件3日内核对往来明细金额（逾期将视为以我方数据为准），如与贵公司数据一致，请在公司签章处盖章或回复邮件确认（抄送人请一并回复），如有差异请将贵公司数额详细列示，金额不可取整数，谢谢。"
           ></el-input>
-        </el-form-item>
-        <el-form-item label="内容图片：" prop="textImage">
+        </el-form-item> -->
+        <!-- <el-form-item label="图书封面：" prop="textImage">
           <el-upload
             ref="textImage"
             :action="action"
@@ -184,17 +214,10 @@
             <el-button size="small" type="primary">点击上传</el-button>
           </el-upload>
         </el-form-item>
-        <el-form-item label="附件：" prop="attachment">
-          <el-upload
-            ref="attachment"
-            :action="action"
-            :on-preview="handlePictureCardPreview"
-            :on-success="handleSuccess1"
-            :on-remove="handleRemove"
-          >
-            <el-button size="small" type="primary">点击上传</el-button>
-          </el-upload>
-        </el-form-item>
+        <el-form-item label="图书二维码：" prop="attachment">
+          <el-button size="small" type="primary" @click="qrcode('点击生成二维码')" v-if="isQrcode">点击生成二维码</el-button>
+          <div id="qrcode" ref="qrcode" style=""></div>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -216,6 +239,7 @@ import {
   deleteDownload,
   queryPassword,
 } from "@/api/sysDownLoadLog";
+import QRCode from 'qrcodejs2';
 
 export default {
   components: {},
@@ -287,7 +311,8 @@ export default {
       action: process.env.VUE_APP_BASE_API + "/export/uploadFile",
       textImage: [],
       attachment: [],
-      submitDisabled:false
+      submitDisabled:false,
+      isQrcode:true,
     };
   },
   created() {},
@@ -296,6 +321,15 @@ export default {
   },
   computed: {},
   methods: {
+    qrcode(url) {
+      this.$refs.qrcode.innerHTML = ''; // 清空之前生成的二维码内容
+      let qrcode = new QRCode('qrcode', {
+        width: 100, // 设置宽度，单位像素
+        height: 100, // 设置高度，单位像素
+        text: url // 设置二维码内容或跳转地址(完整链接)
+      });
+      this.isQrcode = false
+    },
     beforeAvatarUpload(file) {
       let arr = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
       if (!arr.includes(file.type)) {
@@ -372,18 +406,18 @@ export default {
     },
     //批量发送
     batchSend() {
-      let arr = [];
-      if (this.multipleSelection && this.multipleSelection.length == 0) {
-        this.$message.error("请最少勾选一条内容进行发送");
-        return false;
-      }
-      this.multipleSelection.forEach((item) => {
-        arr.push(item.id);
-      });
-      for (let key in this.form) {
-        this.form[key] = "";
-      }
-      this.form.fileId = arr.join(",");
+      // let arr = [];
+      // if (this.multipleSelection && this.multipleSelection.length == 0) {
+      //   this.$message.error("请最少勾选一条内容进行发送");
+      //   return false;
+      // }
+      // this.multipleSelection.forEach((item) => {
+      //   arr.push(item.id);
+      // });
+      // for (let key in this.form) {
+      //   this.form[key] = "";
+      // }
+      // this.form.fileId = arr.join(",");
       this.dialogFormVisible = true;
     },
     handleSelectionChange(val) {

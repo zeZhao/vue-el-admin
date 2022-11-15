@@ -1,7 +1,7 @@
 <template>
   <div class="NavMenu">
     <div class="nav_conent">
-      <div class="nav_conent_title">短信V3数据导出工具</div>
+      <div class="nav_conent_title">天天图书管理系统</div>
       <div class="nav_conent_handle clearfix">
         <!-- <div class="handle_name">
           <div class="name_img">
@@ -86,13 +86,14 @@ export default {
       this.confirmVisible = true;
     },
     submitExport() {
-      logout().then((res) => {
-        if (res.code === 200) {
-          this.$message.success("退出成功");
+      this.$message.success("退出成功");
           setStorage("token");
           this.$router.push("/login");
-        }
-      });
+      // logout().then((res) => {
+      //   if (res.code === 200) {
+          
+      //   }
+      // });
     },
   },
   watch: {},
