@@ -1,19 +1,21 @@
 <template>
   <div class="login-container">
-    <!-- <div class="head-logo">
-      <img :src="logo" alt />
-      <h3>短信导出工具</h3>
-    </div> -->
+    <div class="head-logo">
+      <!-- <img :src="logo" alt /> -->
+      <!-- <img src="@/assets/images/logo1.jpg" alt="" /> -->
+      <!-- <h3>短信导出工具</h3> -->
+    </div>
     <div class="content clearfix">
       <div class="left">
-        <h2 class="title">短信V3数据导出工具</h2>
+        <!-- <h2 class="title">天天图书管理系统</h2> -->
         <div class="img">
-          <img src="@/assets/images/logo_banner@2x.png" alt="" />
+          <!-- <img src="@/assets/images/logo_banner@2x.png" alt="" /> -->
+          <img src="@/assets/images/logo1.jpg" alt="" />
         </div>
       </div>
       <div class="right">
         <div class="content_form">
-          <h2 class="content_title">登录</h2>
+          <h2 class="content_title">天天图书管理系统</h2>
           <el-form
             ref="loginForm"
             :model="loginForm"
@@ -146,37 +148,53 @@ export default {
         num;
     },
     handleLogin() {
-      // if (this.loginForm.username.length === 0) {
-      //   this.$message.error("请输入手机号");
-      //   return;
-      // }
-      // if (this.loginForm.password.length === 0) {
-      //   this.$message.error("请输入密码");
-      //   return;
-      // }
+      if (this.loginForm.username.length === 0) {
+        this.$message.error("请输入账号");
+        return;
+      }
+      if (this.loginForm.password.length === 0) {
+        this.$message.error("请输入密码");
+        return;
+      }
       // if (this.loginForm.verifyCode.length === 0) {
       //   this.$message.error("请输入口令");
       //   return;
       // }
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          this.loading = true;
+          // this.loading = true;
+          // const smsToken = "token" + randomNum();
+          //       setStorage("token", smsToken);
+          //       // setStorage("info", data.data);
+          //       this.$router.push("./aloneExport");
+          //       this.$message.success("登录成功");
           login({
-            loginName: this.loginForm.username,
+            username: this.loginForm.username,
             password: this.loginForm.password,
-            verifyCode: this.loginForm.verifyCode,
+            // verifyCode: this.loginForm.verifyCode,
             // uuId: this.loginForm.uuid
           })
             .then((data) => {
-              if (data.code === 200) {
-                const smsToken = "token" + randomNum();
+              if(data.data.token){
+                // const smsToken = "token" + randomNum();
+                const smsToken = data.data.token;
                 setStorage("token", smsToken);
-                setStorage("info", data.data);
-                this.$router.push("./aloneExport");
-                this.$message.success("登录成功");
-              } else {
-                this.getCaptcha();
+                setStorage("info", data.data.user);
+                this.$router.push("/book");
+                this.$message.success("登录成功");    
+              }else{
+                this.$message.error('请检查重新您的账号密码')
               }
+              
+              // if (data.code === 200) {
+              //   const smsToken = "token" + randomNum();
+              //   setStorage("token", smsToken);
+              //   setStorage("info", data.data);
+              //   this.$router.push("./aloneExport");
+              //   this.$message.success("登录成功");
+              // } else {
+              //   this.getCaptcha();
+              // }
               this.loading = false;
             })
             .catch((error) => {
@@ -205,6 +223,9 @@ $light_gray: #eee;
   background: url("../../assets/images/logo_back@2x.png") no-repeat;
   background-size: cover;
   overflow: hidden;
+  .head-logo{
+    position: absolute;
+  }
   .content {
     width: 1076px;
     margin: 180px auto 0;
@@ -223,7 +244,7 @@ $light_gray: #eee;
       }
       .img {
         width: 472px;
-        height: 312px;
+        height: 395px;
         img {
           width: 100%;
           height: 100%;

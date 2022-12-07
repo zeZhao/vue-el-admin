@@ -1,56 +1,42 @@
 import request from '@/utils/http'
 
-export function download(data) {
-  return request({
-    url: '/downloadCenter/download',
-    method: 'get',
-    responseType: "blob",
-    params: data
-  })
-}
 export function queryByPage(data) {
   return request({
-    url: '/downloadCenter/queryByPage',
+    url: '/bootList',
     method: 'post',
     data
   })
 }
-//取消
-export function cancelDownload(data) {
+//xinzeng
+export function insertBoot(data) {
   return request({
-    url: '/downloadCenter/cancelDownload',
+    url: '/insertBoot',
     method: 'post',
     data
   })
 }
-//发送
-export function sendMailAndSms(data) {
+//xinzeng
+export function update(data) {
   return request({
-    url: '/export/sendMailAndSms',
+    url: '/update',
     method: 'post',
     data
   })
 }
-//上传文件
-export function uploadFile(data) {
+//xinzeng
+export function deteleBoot(data) {
   return request({
-    url: '/export/uploadFile',
+    url: '/deleteBoot',
+    method: 'post',
+    data
+  })
+}
+//xinzeng
+export function upload(data) {
+  return request({
+    url: '/upload',
     method: 'post',
     data,
-    responseType:'blob'
-  })
-}
-//发送
-export function deleteDownload(data) {
-  return request({
-    url: `/downloadCenter/delete?id=${data}`,
-    method: 'delete',
-  })
-}
-//查看密码
-export function queryPassword(data) {
-  return request({
-    url: `/downloadCenter/queryPassword?id=${data}`,
-    method: 'get',
+    
   })
 }

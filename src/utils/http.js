@@ -11,7 +11,7 @@ const service = axios.create({
 
 service.interceptors.request.use(
   config => {
-    config.headers['token'] = store.state.token
+    config.headers['token'] = getStorage('token')
     return config
   },
   error => {
@@ -26,13 +26,13 @@ service.interceptors.response.use(
         message: res.msg || res.data || '系统异常，请联系管理员',
         type: 'error',
       })
-    } else if (res.code === 501) {
+    } else if (res.code === 401) {
       setStorage("token")
       Message({
         message: '登录过期，请重新登录！',
         type: 'error',
       })
-      setTimeout(() => window.location.href = '/', 2000);
+      setTimeout(() => window.location.reload(), 2000);
     }
     return res
   },
